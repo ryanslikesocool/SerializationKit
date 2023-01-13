@@ -1,8 +1,16 @@
 import Foundation
 
-// extension SIMD2: SerializedArrayConvertible & SerializedObject where Scalar: SerializedObject {}
-// extension SIMD3: SerializedArrayConvertible & SerializedObject where Scalar: SerializedObject {}
-// extension SIMD4: SerializedArrayConvertible & SerializedObject where Scalar: SerializedObject {}
+extension SIMD2: SerializedArrayConvertible & SerializedObject where Scalar: SerializedObject {
+    public typealias RootSerializedType = Array<Scalar.RootSerializedType>
+}
+
+extension SIMD3: SerializedArrayConvertible & SerializedObject where Scalar: SerializedObject {
+    public typealias RootSerializedType = Array<Scalar.RootSerializedType>
+}
+
+extension SIMD4: SerializedArrayConvertible & SerializedObject where Scalar: SerializedObject {
+    public typealias RootSerializedType = Array<Scalar.RootSerializedType>
+}
 
 public extension SerializedArrayConvertible where Self: SIMD, Self.Scalar: SerializedObject, Self.SerializedElement == Scalar {
     typealias SerializedType = Array<Scalar.RootSerializedType>

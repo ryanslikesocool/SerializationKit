@@ -8,7 +8,7 @@ public protocol PlistDictionary: SerializedDictionaryConvertible, SerializedData
 public extension PlistDictionary {
     init(data: Data) throws {
         do {
-            let dictionary = try PropertyListSerialization.propertyList(from: data, options: [.mutableContainersAndLeaves], format: .none) as! SerializedDictionary
+            let dictionary = try PropertyListSerialization.propertyList(from: data, options: [.mutableContainersAndLeaves], format: .none) as! [String: any RootSerializable]
             self.init(dictionary: dictionary)
         } catch {
             throw CocoaError(.fileReadCorruptFile)
