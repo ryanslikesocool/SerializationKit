@@ -1,8 +1,6 @@
 import Foundation
 
 extension UUID {
-	public typealias RootSerializedType = String
-
     public init?(unwrap any: Any?) {
         switch any {
             case let this as Self: self = this
@@ -16,5 +14,5 @@ extension UUID {
         }
     }
 
-    public func serialize() -> RootSerializedType { uuidString }
+    public func serialize() -> RootSerializable { uuidString }
 }

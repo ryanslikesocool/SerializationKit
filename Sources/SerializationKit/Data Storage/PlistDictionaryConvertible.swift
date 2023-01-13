@@ -1,14 +1,14 @@
 import Foundation
 
 /// A `SerializedDictionaryConvertible` with `plist` data conversion.
-public protocol PlistDictionary: SerializedDictionaryConvertible, SerializedDataConvertible {
+public protocol PlistDictionaryConvertible: SerializedDictionaryConvertible, SerializedDataConvertible {
     var format: PropertyListSerialization.PropertyListFormat { get }
 }
 
-public extension PlistDictionary {
+public extension PlistDictionaryConvertible {
     init(data: Data) throws {
         do {
-            let dictionary = try PropertyListSerialization.propertyList(from: data, options: [.mutableContainersAndLeaves], format: .none) as! [String: any RootSerializable]
+            let dictionary = try PropertyListSerialization.propertyList(from: data, options: [.mutableContainersAndLeaves], format: .none) as! [String: RootSerializable]
             self.init(dictionary: dictionary)
         } catch {
             throw CocoaError(.fileReadCorruptFile)
@@ -20,6 +20,6 @@ public extension PlistDictionary {
     }
 
     func toData(format: PropertyListSerialization.PropertyListFormat) throws -> Data {
-        try Serialization.toPlistData(self, format: format)
+        try SerializationUtility.toPlistData(self, format: format)
     }
 }

@@ -1,6 +1,6 @@
 import Foundation
 
-public extension SerializedObject where Self: LosslessStringConvertible {
+public extension SerializedObjectConvertible where Self: LosslessStringConvertible {
 	init?(unwrap any: Any?) {
 		switch any {
 			case let this as Self: self = this

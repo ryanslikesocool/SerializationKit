@@ -1,6 +1,6 @@
 import Foundation
 
-public extension RawRepresentable where RawValue: SerializedObject {
+public extension SerializedObjectConvertible where Self: RawRepresentable, RawValue: SerializedObjectConvertible {
     init?(unwrap any: Any?) {
         switch any {
             case let this as Self: self = this
@@ -14,5 +14,5 @@ public extension RawRepresentable where RawValue: SerializedObject {
         }
     }
 
-    func serialize() -> any RootSerializable { rawValue.serialize() }
+    func serialize() -> RootSerializable { rawValue.serialize() }
 }

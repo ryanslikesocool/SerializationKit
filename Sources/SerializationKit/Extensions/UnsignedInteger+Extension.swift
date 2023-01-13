@@ -1,6 +1,6 @@
 import Foundation
 
-public extension SerializedObject where Self: UnsignedInteger & FixedWidthInteger {
+public extension SerializedObjectConvertible where Self: UnsignedInteger & FixedWidthInteger {
     // `UnsignedInteger` does not conform to `FixedWidthInteger` (and `LosslessStringConvertible`,
     // via inheritance) by default, however, common unsigned integer types (`UInt8`, `UInt16`,
     // `UInt32`, `UInt64`, and `UInt`) conform to both.

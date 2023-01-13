@@ -1,25 +1,17 @@
 import Foundation
 
-extension SIMD2: SerializedArrayConvertible & SerializedObject where Scalar: SerializedObject {
-    public typealias RootSerializedType = Array<Scalar.RootSerializedType>
-}
+extension SIMD2: SerializedObjectConvertible & Serializable where Scalar: SerializedObjectConvertible {}
 
-extension SIMD3: SerializedArrayConvertible & SerializedObject where Scalar: SerializedObject {
-    public typealias RootSerializedType = Array<Scalar.RootSerializedType>
-}
+extension SIMD3: SerializedObjectConvertible & Serializable where Scalar: SerializedObjectConvertible {}
 
-extension SIMD4: SerializedArrayConvertible & SerializedObject where Scalar: SerializedObject {
-    public typealias RootSerializedType = Array<Scalar.RootSerializedType>
-}
+extension SIMD4: SerializedObjectConvertible & Serializable where Scalar: SerializedObjectConvertible {}
 
-public extension SerializedArrayConvertible where Self: SIMD, Self.Scalar: SerializedObject, Self.SerializedElement == Scalar {
-    typealias SerializedType = Array<Scalar.RootSerializedType>
-
-    init(array: [SerializedElement]) {
+public extension SerializedObjectConvertible where Self: SIMD, Self.Scalar: SerializedObjectConvertible {
+    init(array: [Scalar]) {
         self.init(array)
     }
 
-    func serialize() -> Self.RootSerializedType {
-        indices.map { self[$0].serialize() } as! Self.RootSerializedType
+    func serialize() -> RootSerializable {
+        indices.map { self[$0].serialize() }
     }
 }

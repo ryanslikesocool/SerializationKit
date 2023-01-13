@@ -1,8 +1,6 @@
 import Foundation
 
 extension Date {
-	public typealias RootSerializedType = Double
-
     public init?(unwrap any: Any?) {
         switch any {
             case let this as Self: self = this
@@ -17,5 +15,5 @@ extension Date {
         }
     }
 
-    public func serialize() -> RootSerializedType { timeIntervalSinceReferenceDate }
+    public func serialize() -> RootSerializable { timeIntervalSinceReferenceDate }
 }
