@@ -6,7 +6,7 @@ public protocol JsonDictionaryConvertible: SerializedDictionaryConvertible, Seri
 public extension JsonDictionaryConvertible {
     init(data: Data) throws {
         do {
-			let dictionary = try JSONSerialization.jsonObject(with: data, options: []) as! [String: RootSerializable]
+			let dictionary = try JSONSerialization.jsonObject(with: data, options: []) as! [String: any Serializable]
             self.init(dictionary: dictionary)
         } catch {
             throw CocoaError(.fileReadCorruptFile)

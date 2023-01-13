@@ -1,10 +1,5 @@
 import Foundation
 
-/// The base protocol for any object that can be serialized into data.
-public protocol SerializedObjectConvertible: Serializable {}
-
-// MARK: - Provided Conformance
-
 extension Bool: SerializedObjectConvertible { }
 extension String: SerializedObjectConvertible { }
 

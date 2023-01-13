@@ -15,5 +15,5 @@ extension Date {
         }
     }
 
-    public func serialize() -> RootSerializable { timeIntervalSinceReferenceDate }
+    public func serialize() -> Any { timeIntervalSinceReferenceDate }
 }

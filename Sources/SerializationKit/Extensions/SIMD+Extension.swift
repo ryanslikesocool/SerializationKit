@@ -11,7 +11,7 @@ public extension SerializedObjectConvertible where Self: SIMD, Self.Scalar: Seri
         self.init(array)
     }
 
-    func serialize() -> RootSerializable {
+    func serialize() -> Any {
         indices.map { self[$0].serialize() }
     }
 }

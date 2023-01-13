@@ -14,5 +14,5 @@ extension UUID {
         }
     }
 
-    public func serialize() -> RootSerializable { uuidString }
+    public func serialize() -> Any { uuidString }
 }

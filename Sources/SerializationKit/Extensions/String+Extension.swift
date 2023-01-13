@@ -8,4 +8,6 @@ extension String {
             default: return nil
         }
     }
+
+	public func serialize() -> Any { self }
 }

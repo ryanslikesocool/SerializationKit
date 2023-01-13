@@ -14,5 +14,5 @@ public extension SerializedObjectConvertible where Self: RawRepresentable, RawVa
         }
     }
 
-    func serialize() -> RootSerializable { rawValue.serialize() }
+    func serialize() -> Any { rawValue.serialize() }
 }

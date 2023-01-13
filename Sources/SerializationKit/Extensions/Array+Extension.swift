@@ -1,19 +1,13 @@
 import Foundation
 
-extension Array: SerializedArrayConvertible & Serializable where Element: Serializable {
-    public init(array: [RootSerializable]) {
-        self = array.compactMap { Element(unwrap: $0) }
-    }
+extension Array: SerializedArrayConvertible & Serializable where Element: SerializedObjectConvertible {
+	public init(array: [Element]) {
+		self = array
+	}
 
-    public func toArray() -> [any Serializable] { self }
+	public func toArray() -> [Any] { self }
 
-    public func serialize() -> RootSerializable {
-        map { $0.serialize() }
-    }
-}
-
-public extension Serializable where Self == Array<any Serializable> {
-    func serialize() -> RootSerializable {
-        (self as Array<any Serializable>).map { $0.serialize() }
-    }
+	public func serialize() -> Any {
+		map { $0.serialize() }
+	}
 }
