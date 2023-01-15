@@ -1,7 +1,7 @@
 import Foundation
 
-extension Bool {
+public extension Bool {
 	// See LosslessStringConvertible+Extension.swift for initializer
 
-    public func serialize() -> Any { self }
+	func serialize() -> Any { self }
 }

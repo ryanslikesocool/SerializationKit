@@ -12,7 +12,7 @@ extension Array: SerializedArrayConvertible & Serializable where Element: Serial
 	}
 }
 
-//extension Array: SerializedArrayConvertible & Serializable where Element: SerializedDictionaryConvertible {
+// extension Array: SerializedArrayConvertible & Serializable where Element: SerializedDictionaryConvertible {
 //	public init?(unwrap any: Any?) {
 //		guard let array = any as? [[String: Any]] else {
 //			return nil
@@ -28,4 +28,4 @@ extension Array: SerializedArrayConvertible & Serializable where Element: Serial
 //	public func toArray() -> [[String: Any]] {
 //		map { $0.serialize() }
 //	}
-//}
+// }
