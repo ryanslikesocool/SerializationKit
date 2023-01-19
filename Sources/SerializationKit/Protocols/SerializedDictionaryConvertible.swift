@@ -3,7 +3,7 @@ import Foundation
 /// The base protocol for an object that can be serialized into a `[String: any SerializedObjectConvertible]` dictionary.
 public protocol SerializedDictionaryConvertible: Serializable {
 	init(dictionary: [String: Any])
-	func toDictionary() -> [String: Any]
+	func toDictionary() -> [String: Any?]
 }
 
 public extension SerializedDictionaryConvertible {
@@ -16,6 +16,7 @@ public extension SerializedDictionaryConvertible {
 	}
 
 	func serialize() -> Any {
-		SerializationUtility.attemptSerialization(toDictionary())
+		let dictionary = toDictionary().compactMapValues { $0 }
+		return SerializationUtility.attemptSerialization(dictionary)
 	}
 }
