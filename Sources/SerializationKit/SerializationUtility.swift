@@ -1,8 +1,6 @@
 import Foundation
 
-public struct SerializationUtility {
-	private init() { }
-
+public enum SerializationUtility {
 	public static func toPlistData(_ serializedDictionary: any SerializedDictionaryConvertible, format: PropertyListSerialization.PropertyListFormat) throws -> Data {
 		let dictionary = serializedDictionary.serialize()
 		return try PropertyListSerialization.data(fromPropertyList: dictionary, format: format, options: 0)
