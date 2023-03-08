@@ -3,6 +3,7 @@ import Foundation
 extension Bool: SerializedObjectConvertible { }
 extension String: SerializedObjectConvertible { }
 
+extension Float16: SerializedObjectConvertible { }
 extension Float: SerializedObjectConvertible { }
 extension Double: SerializedObjectConvertible { }
 

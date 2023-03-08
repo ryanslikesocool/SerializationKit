@@ -14,6 +14,18 @@ public extension SerializedArrayConvertible {
 	}
 }
 
+public extension SerializedArrayConvertible where SerializedElementType: RawRepresentable {
+	init?(unwrap any: Any?) {
+		switch any {
+			case let this as Self: self = this
+			case let array as [SerializedElementType.RawValue]: self.init(array: array.compactMap { SerializedElementType(unwrap: $0) })
+			case let dictionaryArray as [[String: Any]]: self.init(array: dictionaryArray.compactMap { SerializedElementType(unwrap: $0) })
+			case let array as [SerializedElementType]: self.init(array: array)
+			default: return nil
+		}
+	}
+}
+
 public extension SerializedArrayConvertible {
 	init?(unwrap any: Any?) {
 		switch any {

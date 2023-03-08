@@ -1,7 +1,7 @@
 import Foundation
 
 /// A `SerializedDictionaryConvertible` with `json` data conversion.
-public protocol JsonDictionaryConvertible: SerializedDictionaryConvertible, SerializedDataConvertible { }
+public protocol JsonDictionaryConvertible: SerializedDictionaryConvertible, JsonDataConvertible { }
 
 public extension JsonDictionaryConvertible {
 	init(data: Data) throws {

@@ -1,7 +1,7 @@
 import Foundation
 
 /// A `SerializedDictionaryConvertible` with `plist` data conversion.
-public protocol PlistDictionaryConvertible: SerializedDictionaryConvertible, SerializedDataConvertible {
+public protocol PlistDictionaryConvertible: SerializedDictionaryConvertible, PlistDataConvertible {
 	static var format: PropertyListSerialization.PropertyListFormat { get }
 }
 
