@@ -1,3 +1,3 @@
 # SerializationKit
 
-A description of this package.
+Common serialization utilities and extensions.

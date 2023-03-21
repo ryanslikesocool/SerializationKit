@@ -1,6 +1,6 @@
 import Foundation
 
-/// The base protocol for an object that can be serialized into a `[String: any SerializedObjectConvertible]` dictionary.
+/// The base protocol for an object that can be serialized into a dictionary.
 public protocol SerializedDictionaryConvertible: Serializable {
 	init(dictionary: [String: Any])
 	func toDictionary() -> [String: Any?]

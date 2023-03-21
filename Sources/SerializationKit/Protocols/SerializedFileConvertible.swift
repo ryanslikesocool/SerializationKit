@@ -1,6 +1,6 @@
 import Foundation
 
-/// The base protocol for an object that can be serialized into a stored file.
+/// The base protocol for an object that can be serialized into a file.
 public protocol SerializedFileConvertible: SerializedDataConvertible {
 	init?(url: URL)
 	func save(to url: URL)

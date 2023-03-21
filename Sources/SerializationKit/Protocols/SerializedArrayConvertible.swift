@@ -1,6 +1,6 @@
 import Foundation
 
-/// The base protocol for an object that can be serialized into an array of elements with the same type.
+/// The base protocol for an object that can be serialized into an array.
 public protocol SerializedArrayConvertible: Serializable {
 	associatedtype SerializedElementType: Serializable
 
