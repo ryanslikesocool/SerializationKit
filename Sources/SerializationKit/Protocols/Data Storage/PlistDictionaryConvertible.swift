@@ -2,7 +2,7 @@ import Foundation
 
 /// A `SerializedDictionaryConvertible` with `plist` data conversion.
 public protocol PlistDictionaryConvertible: SerializedDictionaryConvertible, PlistDataConvertible {
-	static var format: PropertyListSerialization.PropertyListFormat { get }
+	static var plistFormat: PropertyListSerialization.PropertyListFormat { get }
 }
 
 public extension PlistDictionaryConvertible {
@@ -16,7 +16,7 @@ public extension PlistDictionaryConvertible {
 	}
 
 	func toData() throws -> Data {
-		try toData(format: Self.format)
+		try toData(format: Self.plistFormat)
 	}
 
 	func toData(format: PropertyListSerialization.PropertyListFormat) throws -> Data {

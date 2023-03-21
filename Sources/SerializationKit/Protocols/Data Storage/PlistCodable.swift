@@ -9,7 +9,7 @@ public extension PlistCodable {
 	}
 
 	func toData() throws -> Data {
-		try toData(format: Self.format)
+		try toData(format: Self.plistFormat)
 	}
 
 	func toData(format: PropertyListSerialization.PropertyListFormat) throws -> Data {
