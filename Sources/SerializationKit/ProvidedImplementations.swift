@@ -3,7 +3,8 @@ import Foundation
 extension Bool: SerializedObjectConvertible { }
 extension String: SerializedObjectConvertible { }
 
-extension Float16: SerializedObjectConvertible { }
+// Float16 is only available on Apple Silicon
+//extension Float16: SerializedObjectConvertible { }
 extension Float: SerializedObjectConvertible { }
 extension Double: SerializedObjectConvertible { }
 
