@@ -1,6 +1,8 @@
 import Foundation
 import SwiftUI
 
+// TODO: this extension hides important functionality.  maybe remove?
+
 public extension FileDocument where Self: SerializedDataConvertible {
 	init(configuration: ReadConfiguration) throws {
 		guard let data = configuration.file.regularFileContents else {

@@ -9,7 +9,12 @@ public extension JsonCodable {
 	}
 
 	func toData() throws -> Data {
+		try toData(outputFormatting: Self.outputFormatting)
+	}
+
+	func toData(outputFormatting: JSONEncoder.OutputFormatting) throws -> Data {
 		let encoder = JSONEncoder()
+		encoder.outputFormatting = outputFormatting
 		return try encoder.encode(self)
 	}
 }

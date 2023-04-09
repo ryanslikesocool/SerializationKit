@@ -9,12 +9,12 @@ public extension PlistCodable {
 	}
 
 	func toData() throws -> Data {
-		try toData(format: Self.plistFormat)
+		try toData(outputFormat: Self.plistFormat)
 	}
 
-	func toData(format: PropertyListSerialization.PropertyListFormat) throws -> Data {
+	func toData(outputFormat: PropertyListSerialization.PropertyListFormat) throws -> Data {
 		let encoder = PropertyListEncoder()
-		encoder.outputFormat = format
+		encoder.outputFormat = outputFormat
 		return try encoder.encode(self)
 	}
 }
