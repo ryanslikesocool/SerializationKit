@@ -1,5 +1,6 @@
 import Foundation
 
+/// A `Codable` object wrapper to help with cases where a concrete type cannot be used.
 public struct CodablePayload<Base: CodableMetatypeAccessor>: Codable {
 	public private(set) var base: Base
 	public private(set) var payload: any Codable
