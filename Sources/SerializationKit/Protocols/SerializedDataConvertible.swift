@@ -1,7 +1,17 @@
 import Foundation
 
-/// The base protocol for an object that can be serialized into a ``Data`` object.
-public protocol SerializedDataConvertible {
+// MARK: - SerializedDataReadable
+
+public protocol SerializedDataReadable {
 	init(data: Data) throws
+}
+
+// MARK: - SerializedDataWritable
+
+public protocol SerializedDataWritable {
 	func toData() throws -> Data
 }
+
+// MARK: - Typealias
+
+public typealias SerializedDataConvertible = SerializedDataReadable & SerializedDataWritable

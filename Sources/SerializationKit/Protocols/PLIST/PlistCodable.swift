@@ -1,13 +1,27 @@
 import Foundation
 
-public protocol PlistCodable: Codable, PlistDataConvertible { }
+// MARK: - PlistDecodable
 
-public extension PlistCodable {
+public protocol PlistDecodable: Decodable, SerializedDataReadable { }
+
+// MARK: - PlistEncodable
+
+public protocol PlistEncodable: Encodable, PlistDataWritable { }
+
+// MARK: - Typealias
+
+public typealias PlistCodable = PlistDecodable & PlistEncodable
+
+// MARK: - Default Implementation
+
+public extension PlistDecodable {
 	init(data: Data) throws {
 		let decoder = PropertyListDecoder()
 		self = try decoder.decode(Self.self, from: data)
 	}
+}
 
+public extension PlistEncodable {
 	func toData() throws -> Data {
 		try toData(outputFormat: Self.plistFormat)
 	}

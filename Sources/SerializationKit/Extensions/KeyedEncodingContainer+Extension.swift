@@ -3,7 +3,7 @@ import Foundation
 public extension KeyedEncodingContainer {
 	mutating func encode<T: CodableMetatypeAccessor, U: Codable>(_ value: U, using metatype: T.Type, forKey key: KeyedEncodingContainer<K>.Key) throws {
 		let valueType = type(of: value)
-		guard let base = T.allCases.first(where: { metatype in metatype.codableMetatype == valueType }) else {
+		guard let base = T.allCases.first(where: { metatype in metatype.encodableMetatype == valueType }) else {
 			print("Failed to find a valid metatype in \(T.self) for the given value \(value)")
 			return
 		}
@@ -13,7 +13,7 @@ public extension KeyedEncodingContainer {
 	mutating func encode<T: CodableMetatypeAccessor>(_ values: [any Codable], using metatype: T.Type, forKey key: KeyedEncodingContainer<K>.Key) throws {
 		try encode(values.compactMap { value -> CodablePayload<T>? in
 			let valueType = type(of: value)
-			guard let base = T.allCases.first(where: { metatype in metatype.codableMetatype == valueType }) else {
+			guard let base = T.allCases.first(where: { metatype in metatype.encodableMetatype == valueType }) else {
 				print("Failed to find a valid metatype in \(T.self) for the given value \(value)")
 				return nil
 			}

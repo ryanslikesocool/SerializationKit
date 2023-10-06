@@ -1,12 +1,24 @@
 import Foundation
 
-/// The base protocol for an object that can be serialized into a file.
-public protocol SerializedFileConvertible: SerializedDataConvertible {
+// MARK: - SerializedFileReadable
+
+public protocol SerializedFileReadable: SerializedDataReadable {
 	init?(url: URL)
+}
+
+// MARK: - SerializedFileWritable
+
+public protocol SerializedFileWritable: SerializedDataWritable {
 	func save(to url: URL)
 }
 
-public extension SerializedFileConvertible {
+// MARK: - Typealias
+
+public typealias SerializedFileConvertible = SerializedFileReadable & SerializedFileWritable
+
+// MARK: - Default Implementation
+
+public extension SerializedFileReadable {
 	init?(url: URL) {
 		do {
 			let data = try Data(contentsOf: url)
@@ -15,7 +27,9 @@ public extension SerializedFileConvertible {
 			return nil
 		}
 	}
+}
 
+public extension SerializedFileWritable {
 	func save(to url: URL) {
 		let fileManager = FileManager.default
 
