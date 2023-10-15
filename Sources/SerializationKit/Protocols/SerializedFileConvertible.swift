@@ -34,9 +34,8 @@ public extension SerializedFileWritable {
 		let fileManager = FileManager.default
 
 		do {
-			var isDirectory: ObjCBool = true
 			let folder = url.deletingLastPathComponent()
-			if !fileManager.fileExists(atPath: folder.path, isDirectory: &isDirectory) {
+			if !fileManager.fileExists(atPath: folder.path) {
 				try fileManager.createDirectory(at: folder, withIntermediateDirectories: true, attributes: nil)
 			}
 
