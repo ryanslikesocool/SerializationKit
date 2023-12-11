@@ -19,6 +19,11 @@ let package = Package(
 	],
 	dependencies: [],
 	targets: [
-		.target(name: "SerializationKit", dependencies: []),
+		.target(name: "SerializationKit"),
+
+		.testTarget(
+			name: "SerializationKitTests",
+			dependencies: ["SerializationKit"]
+		),
 	]
 )
