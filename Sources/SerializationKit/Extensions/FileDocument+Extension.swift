@@ -1,3 +1,4 @@
+#if canImport(SwiftUI)
 import Foundation
 import SwiftUI
 
@@ -28,3 +29,4 @@ public extension FileDocument where Self: FileWrapperWritable {
 		try fileWrapper()
 	}
 }
+#endif

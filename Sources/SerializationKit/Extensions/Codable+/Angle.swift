@@ -1,3 +1,4 @@
+#if canImport(SwiftUI)
 import SwiftUI
 
 extension Angle: Codable {
@@ -11,3 +12,4 @@ extension Angle: Codable {
 		try container.encode(radians)
 	}
 }
+#endif

@@ -2,28 +2,28 @@ import Foundation
 
 // MARK: - PlistDecodable
 
-public protocol PlistDecodable: Decodable, SerializedDataReadable { }
+public protocol PropertyListDecodable: Decodable, SerializedDataReadable { }
 
 // MARK: - PlistEncodable
 
-public protocol PlistEncodable: Encodable, PlistDataWritable { }
+public protocol PropertyListEncodable: Encodable, PlistDataWritable { }
 
 // MARK: - Typealias
 
-public typealias PlistCodable = PlistDecodable & PlistEncodable
+public typealias PropertyListCodable = PlistDecodable & PlistEncodable
 
 // MARK: - Default Implementation
 
-public extension PlistDecodable {
+public extension PropertyListDecodable {
 	init(data: Data) throws {
 		let decoder = PropertyListDecoder()
 		self = try decoder.decode(Self.self, from: data)
 	}
 }
 
-public extension PlistEncodable {
+public extension PropertyListEncodable {
 	func toData() throws -> Data {
-		try toData(outputFormat: Self.plistFormat)
+		try toData(outputFormat: Self.propertyListFormat)
 	}
 
 	func toData(outputFormat: PropertyListSerialization.PropertyListFormat) throws -> Data {
