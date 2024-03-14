@@ -6,12 +6,12 @@ public struct FileMap<ID: Hashable & Codable> {
 
 	public var order: [ID]
 
-	public init(_ order: [ID] = []) {
+	public init(order: [ID] = []) {
 		self.order = order
 	}
 
-	public init<T: Identifiable>(_ elements: some Sequence<T>) where T.ID == ID {
-		self.init(elements.map(\.id))
+	public init<T: Identifiable>(elements: some Sequence<T>) where T.ID == ID {
+		self.init(order: elements.map(\.id))
 	}
 
 	public func sort<T: Identifiable>(_ elements: some Sequence<T>) -> [T] where T.ID == ID {
@@ -30,7 +30,7 @@ public struct FileMap<ID: Hashable & Codable> {
 public extension FileMap {
 	init(from decoder: any Decoder) throws {
 		let container = try decoder.singleValueContainer()
-		try self.init(container.decode([ID].self))
+		try self.init(order: container.decode([ID].self))
 	}
 
 	func encode(to encoder: any Encoder) throws {
