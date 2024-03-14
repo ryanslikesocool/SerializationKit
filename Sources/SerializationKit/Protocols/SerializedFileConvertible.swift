@@ -18,6 +18,27 @@ public typealias SerializedFileConvertible = SerializedFileReadable & Serialized
 
 // MARK: - Default Implementation
 
+public extension SerializedFileReadable where Self: FileWrapperReadable {
+	init(url: URL) throws {
+		let fileWrapper = try FileWrapper(url: url)
+		try self.init(fileWrapper: fileWrapper)
+	}
+}
+
+public extension SerializedFileWritable where Self: FileWrapperWritable {
+	func save(to url: URL) throws {
+		try url.createIntermediateDirectories()
+		
+		let fileManager = FileManager.default
+		if fileManager.fileExists(atPath: url.path) {
+			try fileManager.removeItem(at: url)
+		}
+		
+		let fileWrapper = try fileWrapper()
+		try fileWrapper.write(to: url, originalContentsURL: nil)
+	}
+}
+
 public extension SerializedFileReadable {
 	init(url: URL) throws {
 		let data = try Data(contentsOf: url)
@@ -27,12 +48,9 @@ public extension SerializedFileReadable {
 
 public extension SerializedFileWritable {
 	func save(to url: URL) throws {
-		let fileManager = FileManager.default
-		let folder = url.deletingLastPathComponent()
-		if !fileManager.fileExists(atPath: folder.path) {
-			try fileManager.createDirectory(at: folder, withIntermediateDirectories: true, attributes: nil)
-		}
+		try url.createIntermediateDirectories()
 
+		let fileManager = FileManager.default
 		if !fileManager.fileExists(atPath: url.path) {
 			fileManager.createFile(atPath: url.path, contents: nil, attributes: nil)
 		}
