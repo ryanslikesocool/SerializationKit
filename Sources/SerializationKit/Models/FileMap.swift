@@ -41,8 +41,8 @@ public extension FileMap {
 
 // MARK: - PlistCodable
 
-extension FileMap: PlistCodable {
-	public static var propertyListFormat: PropertyListSerialization.PropertyListFormat { .xml }
+extension FileMap: PropertyListCodable {
+	public static var propertyListFormat: PropertyListFormat { .xml }
 }
 
 // MARK: - FileWrapperConvertible
