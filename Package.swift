@@ -1,5 +1,6 @@
-// swift-tools-version: 5.7
+// swift-tools-version: 5.10
 
+import CompilerPluginSupport
 import PackageDescription
 
 let package = Package(
@@ -12,18 +13,38 @@ let package = Package(
 		.watchOS(.v8),
 	],
 	products: [
-		.library(
-			name: "SerializationKit",
-			targets: ["SerializationKit"]
-		),
+		.library(name: "SerializationKit", targets: [
+			"SerializationKit",
+		]),
 	],
-	dependencies: [],
+	dependencies: [
+		.package(url: "https://github.com/swiftlang/swift-syntax.git", from: "510.0.2"),
+	],
 	targets: [
-		.target(name: "SerializationKit"),
+		.target(name: "SerializationKit", dependencies: [
+			"SerializationKitMacrosPlugin",
+		]),
+
+		// MARK: - Plugins
+
+		.macro(name: "SerializationKitMacrosPlugin", dependencies: [
+			.product(name: "SwiftSyntaxMacros", package: "swift-syntax"),
+			.product(name: "SwiftCompilerPlugin", package: "swift-syntax"),
+		]),
+
+		// MARK: - Tests
 
 		.testTarget(
 			name: "SerializationKitTests",
 			dependencies: ["SerializationKit"]
+		),
+
+		.testTarget(
+			name: "SerializationKitMacrosTests",
+			dependencies: [
+				"SerializationKitMacrosPlugin",
+				.product(name: "SwiftSyntaxMacrosTestSupport", package: "swift-syntax"),
+			]
 		),
 	]
 )
