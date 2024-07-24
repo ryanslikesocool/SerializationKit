@@ -33,7 +33,9 @@ private extension StringCodableMacro {
 
 	static func validatePrimaryType(declaration: EnumDeclSyntax) throws {
 		guard
-			let primaryType = declaration.inheritanceClause?.inheritedTypes.first?.type.as(IdentifierTypeSyntax.self)?.name.tokenKind,
+			let primaryType = declaration.inheritanceClause?.inheritedTypes
+			.first?.type.as(IdentifierTypeSyntax.self)?
+			.name.tokenKind,
 			validPrimaryTypes.contains(primaryType)
 		else {
 			throw Diagnostic.requiresPrimaryNumericType
@@ -59,7 +61,7 @@ private extension StringCodableMacro {
 
 private extension StringCodableMacro {
 	static func buildCodingValuesEnum(_ cases: [TokenSyntax]) throws -> EnumDeclSyntax {
-		try EnumDeclSyntax(#"private enum __CodingValues: String, Codable"#) {
+		try EnumDeclSyntax("private enum __CodingValues: String, Codable") {
 			for item in cases {
 				"    case \(item)"
 			}
@@ -67,23 +69,31 @@ private extension StringCodableMacro {
 	}
 
 	static func buildDecoderBlock(_ cases: [TokenSyntax]) throws -> InitializerDeclSyntax {
-		try InitializerDeclSyntax(#"public init(from decoder: any Decoder) throws"#) {
+		let switchContent: String = cases.map { item in
+			"            case __CodingValues.\(item.text): Self.\(item.text)"
+		}.joined(separator: "\n")
+
+		return try InitializerDeclSyntax("public init(from decoder: any Decoder) throws") {
 			"""
 			    let container = try decoder.singleValueContainer()
 			        let codingValue: __CodingValues = try container.decode(__CodingValues.self)
 			        self = switch codingValue {
-			\(raw: cases.map { item in "            case __CodingValues.\(item.text): Self.\(item.text)" }.joined(separator: "\n"))
+			\(raw: switchContent)
 			        }
 			"""
 		}
 	}
 
 	static func buildEncoderBlock(_ cases: [TokenSyntax]) throws -> FunctionDeclSyntax {
-		try FunctionDeclSyntax("public func encode(to encoder: any Encoder) throws") {
+		let switchContent: String = cases.map { item in
+			"            case Self.\(item): __CodingValues.\(item)"
+		}.joined(separator: "\n")
+
+		return try FunctionDeclSyntax("public func encode(to encoder: any Encoder) throws") {
 			"""
 			    var container = encoder.singleValueContainer()
 			        let codingValue: __CodingValues = switch self {
-			\(raw: cases.map { item in "            case Self.\(item): __CodingValues.\(item)" }.joined(separator: "\n"))
+			\(raw: switchContent)
 			        }
 			        try container.encode(codingValue)
 			"""

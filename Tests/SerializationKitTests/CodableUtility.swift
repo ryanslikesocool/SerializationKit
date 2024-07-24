@@ -1,4 +1,5 @@
 import Foundation
+import XCTest
 
 enum CodableUtility {
 	static let encoder: JSONEncoder = {
@@ -29,5 +30,17 @@ extension CodableUtility {
 			throw Error.stringToDataFailure
 		}
 		return try decoder.decode(T.self, from: data)
+	}
+}
+
+extension CodableUtility {
+	static func assertEncoding<Payload: Encodable>(_ payload: Payload, expected expectedString: @autoclosure () -> String) throws {
+		let actual: String = try encode(payload)
+		XCTAssertEqual(actual, expectedString())
+	}
+
+	static func assertDecoding<Payload: Decodable & Equatable>(_ string: String, expected expectedPayload: @autoclosure () -> Payload) throws {
+		let actual: Payload = try decode(string)
+		XCTAssertEqual(actual, expectedPayload())
 	}
 }

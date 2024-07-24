@@ -11,5 +11,6 @@
 ///	    case two
 ///	}
 /// ```
-@attached(extension, names: named(__CodingValues), named(init(from:)), named(encode), conformances: Codable)
-public macro StringCodable() = #externalMacro(module: "SerializationKitMacrosPlugin", type: "StringCodableMacro")
+@attached(extension, names: named(__CodingValues), named(init(from:)), named(encode(to:)), conformances: Codable)
+public macro StringCodable()
+	= #externalMacro(module: "SerializationKitMacrosPlugin", type: "StringCodableMacro")

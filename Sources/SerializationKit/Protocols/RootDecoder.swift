@@ -1,5 +1,6 @@
 import Foundation
 
+/// A root decoder object.
 public protocol RootDecoder {
 	func decode<T: Decodable>(
 		_ type: T.Type,

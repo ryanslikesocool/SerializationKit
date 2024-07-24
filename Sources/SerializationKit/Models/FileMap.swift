@@ -1,7 +1,9 @@
 import Foundation
 
 /// An object useful for encoding and decoding the order of files in a bundle or package.
-public struct FileMap<ID: Hashable & Codable> {
+public struct FileMap<ID>
+	where ID: Hashable & Codable
+{
 	public static var fileName: String { ".file_map" }
 
 	public var order: [ID]
@@ -27,22 +29,22 @@ public struct FileMap<ID: Hashable & Codable> {
 
 // MARK: - Codable
 
-public extension FileMap {
-	init(from decoder: any Decoder) throws {
+extension FileMap: Codable {
+	public init(from decoder: any Decoder) throws {
 		let container = try decoder.singleValueContainer()
 		try self.init(order: container.decode([ID].self))
 	}
 
-	func encode(to encoder: any Encoder) throws {
+	public func encode(to encoder: any Encoder) throws {
 		var container = encoder.singleValueContainer()
 		try container.encode(order)
 	}
 }
 
-// MARK: - PlistCodable
+// MARK: - PropertyListCodable
 
 extension FileMap: PropertyListCodable {
-	public static var propertyListFormat: PropertyListFormat { .xml }
+	public static var propertyListFormat: PropertyListFormat { .binary }
 }
 
 // MARK: - FileWrapperConvertible

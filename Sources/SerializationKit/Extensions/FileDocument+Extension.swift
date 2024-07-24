@@ -20,7 +20,7 @@ public extension FileDocument where Self: SerializedDataWritable {
 
 public extension FileDocument where Self: FileWrapperReadable {
 	init(configuration: ReadConfiguration) throws {
-		try self.init(fileWrapper: configuration.file)
+		try self.init(contentsOf: configuration.file)
 	}
 }
 
