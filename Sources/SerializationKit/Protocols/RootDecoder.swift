@@ -17,7 +17,7 @@ public protocol RootDecoder {
 
 public extension RootDecoder {
 	func decode<T: Decodable>(
-		_ type: T.Type,
+		_ type: T.Type = T.self,
 		from url: URL,
 		options: Data.ReadingOptions = []
 	) throws -> T {

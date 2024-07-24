@@ -6,16 +6,16 @@ import XCTest
 @testable import SerializationKitMacrosPlugin
 
 private let testMacros: [String: Macro.Type] = [
-	"StringSerializable": StringSerializableMacro.self,
+	"StringCodable": StringCodableMacro.self,
 ]
 #endif
 
-final class StringSerializableMacroTests: XCTestCase {
+final class StringCodableMacroTests: XCTestCase {
 	func testStandard() throws {
 #if canImport(SerializationKitMacrosPlugin)
 		assertMacroExpansion(
 			"""
-			@StringSerializable
+			@StringCodable
 			enum MyEnum: UInt8 {
 			    case zero
 			    case one

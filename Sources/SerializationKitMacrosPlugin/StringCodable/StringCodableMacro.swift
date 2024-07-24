@@ -3,7 +3,7 @@ import SwiftDiagnostics
 import SwiftSyntax
 import SwiftSyntaxMacros
 
-public enum StringSerializableMacro: ExtensionMacro {
+public enum StringCodableMacro: ExtensionMacro {
 	public static func expansion(
 		of node: AttributeSyntax,
 		attachedTo declaration: some DeclGroupSyntax,
@@ -23,25 +23,20 @@ public enum StringSerializableMacro: ExtensionMacro {
 
 // MARK: - Syntax Processing
 
-private extension StringSerializableMacro {
+private extension StringCodableMacro {
 	static func unwrapEnumDeclaration(_ declaration: some DeclGroupSyntax) throws -> EnumDeclSyntax {
 		guard let enumDecl = declaration.as(EnumDeclSyntax.self) else {
-			throw StringSerializableMacroDiagnostic.enumOnly
+			throw Diagnostic.enumOnly
 		}
 		return enumDecl
 	}
 
 	static func validatePrimaryType(declaration: EnumDeclSyntax) throws {
 		guard
-			let primaryType = declaration.inheritanceClause?.inheritedTypes.first?.type.as(IdentifierTypeSyntax.self)?.name.tokenKind
-		else {
-			throw StringSerializableMacroDiagnostic.requiresPrimaryNumericType
-		}
-
-		guard
+			let primaryType = declaration.inheritanceClause?.inheritedTypes.first?.type.as(IdentifierTypeSyntax.self)?.name.tokenKind,
 			validPrimaryTypes.contains(primaryType)
 		else {
-			throw StringSerializableMacroDiagnostic.requiresPrimaryNumericType
+			throw Diagnostic.requiresPrimaryNumericType
 		}
 	}
 
@@ -53,7 +48,7 @@ private extension StringSerializableMacro {
 			memberItem.elements.map(\.name)
 		}
 		guard !memberItemIdentifiers.isEmpty else {
-			throw StringSerializableMacroDiagnostic.notEmpty
+			throw Diagnostic.notEmpty
 		}
 
 		return memberItemIdentifiers
@@ -62,7 +57,7 @@ private extension StringSerializableMacro {
 
 // MARK: - String Builder
 
-private extension StringSerializableMacro {
+private extension StringCodableMacro {
 	static func buildCodingValuesEnum(_ cases: [TokenSyntax]) throws -> EnumDeclSyntax {
 		try EnumDeclSyntax(#"private enum __CodingValues: String, Codable"#) {
 			for item in cases {
@@ -106,7 +101,7 @@ private extension StringSerializableMacro {
 
 // MARK: - Constants
 
-private extension StringSerializableMacro {
+private extension StringCodableMacro {
 	static let validPrimaryTypes: [TokenKind] = [
 		TokenKind.identifier("Float"),
 		TokenKind.identifier("Double"),

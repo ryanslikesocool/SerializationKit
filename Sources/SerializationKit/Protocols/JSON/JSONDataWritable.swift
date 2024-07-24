@@ -1,11 +1,15 @@
 import Foundation
 
 public protocol JSONDataWritable: SerializedDataWritable {
-	static var outputFormatting: JSONEncoder.OutputFormatting { get }
+	typealias OutputFormatting = JSONEncoder.OutputFormatting
+
+	static var outputFormatting: OutputFormatting { get }
 	
-	func toData(outputFormatting: JSONEncoder.OutputFormatting) throws -> Data
+	func toData(outputFormatting: OutputFormatting) throws -> Data
 }
 
+// MARK: - Default Implementation
+
 public extension JSONDataWritable {
-	static var outputFormatting: JSONEncoder.OutputFormatting { [] }
+	static var outputFormatting: OutputFormatting { [] }
 }

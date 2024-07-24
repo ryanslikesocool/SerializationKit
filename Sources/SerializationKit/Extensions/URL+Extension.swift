@@ -5,7 +5,7 @@ public extension URL {
 	func createIntermediateDirectories() throws {
 		let fileManager = FileManager.default
 
-		let directory: URL = if try isDirectory {
+		let directory: URL = if hasDirectoryPath {
 			self
 		} else {
 			deletingLastPathComponent()

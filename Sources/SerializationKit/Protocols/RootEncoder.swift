@@ -1,6 +1,8 @@
 import Foundation
 
 public protocol RootEncoder {
+	typealias WritingOptions = Data.WritingOptions
+
 	func encode<T: Encodable>(
 		_ value: T
 	) throws -> Data
@@ -8,7 +10,7 @@ public protocol RootEncoder {
 	func encode<T: Encodable>(
 		_ value: T,
 		to url: URL,
-		options: Data.WritingOptions
+		options: WritingOptions
 	) throws
 }
 
@@ -18,7 +20,7 @@ public extension RootEncoder {
 	func encode<T: Encodable>(
 		_ value: T,
 		to url: URL,
-		options: Data.WritingOptions = []
+		options: WritingOptions = []
 	) throws {
 		let data: Data = try encode(value)
 		try data.write(to: url, options: options)

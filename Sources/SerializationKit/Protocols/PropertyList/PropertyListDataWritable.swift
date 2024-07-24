@@ -1,12 +1,16 @@
 import Foundation
 
 public protocol PropertyListDataWritable: SerializedDataWritable {
-	static var propertyListFormat: PropertyListSerialization.PropertyListFormat { get }
+	typealias PropertyListFormat = PropertyListSerialization.PropertyListFormat
 
-	func toData(outputFormat: PropertyListSerialization.PropertyListFormat) throws -> Data
+	static var propertyListFormat: PropertyListFormat { get }
+
+	func toData(outputFormat: PropertyListFormat) throws -> Data
 }
 
+// MARK: - Default Implementation
+
 public extension PropertyListDataWritable {
-	static var propertyListFormat: PropertyListSerialization.PropertyListFormat { .xml }
-	static var plistFormat: PropertyListSerialization.PropertyListFormat { propertyListFormat }
+	static var propertyListFormat: PropertyListFormat { .xml }
+	static var plistFormat: PropertyListFormat { propertyListFormat }
 }

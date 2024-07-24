@@ -26,7 +26,7 @@ public extension JSONEncodable {
 		try toData(outputFormatting: Self.outputFormatting)
 	}
 
-	func toData(outputFormatting: JSONEncoder.OutputFormatting) throws -> Data {
+	func toData(outputFormatting: OutputFormatting) throws -> Data {
 		try JSONEncoder.shared
 			.with(outputFormatting: outputFormatting)
 			.encode(self)
