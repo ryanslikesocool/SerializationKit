@@ -11,7 +11,7 @@ extension CodableMacro: ExtensionMacro {
 		conformingTo protocols: [TypeSyntax],
 		in context: some MacroExpansionContext
 	) throws -> [ExtensionDeclSyntax] {
-		try validateDeclaration(declaration)
+		try validateObjectDeclaration(declaration)
 		let bindings: [BindingData] = try retrieveBindings(in: declaration)
 		let container: CodableObjectContainer = try retrieveContainerType(in: node, from: bindings)
 
@@ -26,7 +26,7 @@ extension CodableMacro: ExtensionMacro {
 // MARK: - Syntax Processing
 
 private extension CodableMacro {
-	static func validateDeclaration(_ declaration: some DeclGroupSyntax) throws {
+	static func validateObjectDeclaration(_ declaration: some DeclGroupSyntax) throws {
 		guard
 			declaration.is(ClassDeclSyntax.self)
 			|| declaration.is(StructDeclSyntax.self)
@@ -44,19 +44,23 @@ private extension CodableMacro {
 		}
 	}
 
-	static func retrieveBindings(in declaration: some DeclGroupSyntax) throws -> [BindingData] {
-		try declaration.memberBlock.members
+	static func findViableMembers(in declaration: some DeclGroupSyntax) throws -> [VariableDeclSyntax] {
+		declaration.memberBlock.members
 			.compactMap { member in member.decl.as(VariableDeclSyntax.self) }
-			.flatMap { property -> [BindingData] in
-				let argument: MemberAttributeArgument? = try validateMemberAttribute(property)
-				return try processSerializedBindings(in: property, argument: argument)
-			}
 	}
 
-	static func processSerializedBindings(in declaration: VariableDeclSyntax, argument: MemberAttributeArgument?) throws -> [BindingData] {
-		let lastBindingType: TypeSyntax = try validateBindings(in: declaration, argument: argument)
-		return try declaration.bindings.compactMap { binding in
-			try BindingData(defaultType: lastBindingType, binding: binding, argument: argument)
+	static func retrieveBindings(in declaration: some DeclGroupSyntax) throws -> [BindingData] {
+		try findViableMembers(in: declaration)
+			.flatMap(createBindingData)
+	}
+
+	static func createBindingData(for declaration: VariableDeclSyntax) throws -> [BindingData] {
+		let argument: MemberAttributeArgument? = try getMemberAttribute(declaration)
+		try validateBindings(declaration.bindings, argument: argument)
+		let bindings: [(PatternBindingSyntax, TypeSyntax)] = try unwrapBindings(in: declaration)
+
+		return try bindings.compactMap { (binding, type) in
+			try BindingData(defaultType: type, binding: binding, argument: argument)
 		}
 	}
 
@@ -66,7 +70,7 @@ private extension CodableMacro {
 			let expression = arguments.first?.expression,
 			let memberAccess = expression.as(MemberAccessExprSyntax.self),
 			let token = memberAccess.lastToken(viewMode: .fixedUp)?.tokenKind,
-			let container = CodableObjectContainer.associatedTokens[token]
+			let container = CodableObjectContainer(token)
 		else {
 			return retrieveDefaultContainerType(from: bindings)
 		}

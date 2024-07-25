@@ -17,8 +17,11 @@ public enum CodablePropertySerialization: UInt8 {
 // MARK: - Internal
 
 extension CodablePropertySerialization {
-	static let associatedTokens: [TokenKind: Self] = [
-		.identifier("serialized"): .serialized,
-		.identifier("unserialized"): .unserialized,
-	]
+	init?(_ tokenKind: TokenKind) {
+		switch tokenKind {
+			case .identifier("serialized"): self = .serialized
+			case .identifier("unserialized"): self = .unserialized
+			default: return nil
+		}
+	}
 }

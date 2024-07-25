@@ -11,7 +11,8 @@ extension CodableMacro {
 
 		// Member
 		case storedPropertiesOnly
-		case requiresExplicitAnnotation
+		case singleBindingOrNoInitializer
+		case requiresExplicitTypeAnnotation
 		case unserializedRequiresDefault
 		case customKeySingleBinding
 		case onlyOneAttribute
@@ -33,7 +34,8 @@ extension CodableMacro.Diagnostic: DiagnosticMessage {
 			case .typeUnwrapFailure: "@\(Self.macroName) encountered an unexpected issue when unwrapping a type.  Please file a bug report."
 			
 			case .storedPropertiesOnly: "@\(Self.macroName) may only be applied to stored properties."
-			case .requiresExplicitAnnotation: "@\(Self.macroName) requires that the property it is attached to has an explicit type annotation."
+			case .singleBindingOrNoInitializer: "@\(Self.macroName) currently only supports one property binding, or multiple property bindings with no initializers."
+			case .requiresExplicitTypeAnnotation: "@\(Self.macroName) requires that the property it is attached to has an explicit type annotation."
 			case .unserializedRequiresDefault: "@\(Self.macroName) requires that properties marked as `.unserialized` are either optional or have a default value."
 			case .customKeySingleBinding: "@\(Self.macroName) with a custom key may only be applied to a variable declaration with a single binding."
 			case .onlyOneAttribute: "@\(Self.macroName) may only be applied once per property."
