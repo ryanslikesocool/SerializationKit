@@ -3,7 +3,7 @@ import SwiftSyntax
 /// Indicate how an unkeyed sequence should be serialized in an ``CodableObjectContainer/unkeyed`` container.
 public enum CodableSequenceSerialization: UInt8 {
 	/// Allow the sequence to be treated as a single object when serializing.
-	case lazy
+	case nested
 
 	/// Inline the sequence when serializing.
 	case inline
@@ -18,7 +18,7 @@ public enum CodableSequenceSerialization: UInt8 {
 extension CodableSequenceSerialization {
 	init?(_ tokenKind: TokenKind) {
 		switch tokenKind {
-			case .identifier("lazy"): self = .lazy
+			case .identifier("nested"): self = .nested
 			case .identifier("inline"): self = .inline
 			default: return nil
 		}

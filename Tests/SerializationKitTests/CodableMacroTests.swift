@@ -34,7 +34,7 @@ final class CodableMacroTests: XCTestCase {
 
 	func testSingleValueEncoding() throws {
 		try CodableUtility.assertEncoding(
-			SingleValueWrapperPayload(value: TestSingleValuePayload(rawValue: 12)),
+			PayloadWrapper(value: TestSingleValuePayload(rawValue: 12)),
 			expected: """
 			{
 			  "value" : 12
@@ -50,13 +50,13 @@ final class CodableMacroTests: XCTestCase {
 			  "value" : 12
 			}
 			""",
-			expected: SingleValueWrapperPayload(value: TestSingleValuePayload(rawValue: 12))
+			expected: PayloadWrapper(value: TestSingleValuePayload(rawValue: 12))
 		)
 	}
 
 	func testSingleValueOptionalEncoding() throws {
 		try CodableUtility.assertEncoding(
-			SingleValueWrapperPayload(value: TestSingleValueOptionalPayload(rawValue: nil)),
+			PayloadWrapper(value: TestSingleValueOptionalPayload(rawValue: nil)),
 			expected: """
 			{
 			  "value" : null
@@ -67,7 +67,7 @@ final class CodableMacroTests: XCTestCase {
 
 	func testSingleValueOptionalAlternateEncoding() throws {
 		try CodableUtility.assertEncoding(
-			SingleValueWrapperPayload(value: TestSingleValueOptionalPayload(rawValue: 32)),
+			PayloadWrapper(value: TestSingleValueOptionalPayload(rawValue: 32)),
 			expected: """
 			{
 			  "value" : 32
@@ -83,7 +83,7 @@ final class CodableMacroTests: XCTestCase {
 			  "value" : null
 			}
 			""",
-			expected: SingleValueWrapperPayload(value: TestSingleValueOptionalPayload(rawValue: nil))
+			expected: PayloadWrapper(value: TestSingleValueOptionalPayload(rawValue: nil))
 		)
 	}
 
@@ -94,13 +94,13 @@ final class CodableMacroTests: XCTestCase {
 			  "value" : 32
 			}
 			""",
-			expected: SingleValueWrapperPayload(value: TestSingleValueOptionalPayload(rawValue: 32))
+			expected: PayloadWrapper(value: TestSingleValueOptionalPayload(rawValue: 32))
 		)
 	}
 
 	func testSingleValueDefaultEncoding() throws {
 		try CodableUtility.assertEncoding(
-			SingleValueWrapperPayload(value: TestSingleValueDefaultPayload(rawValue: 86)),
+			PayloadWrapper(value: TestSingleValueDefaultPayload(rawValue: 86)),
 			expected: """
 			{
 			  "value" : 86
@@ -116,7 +116,7 @@ final class CodableMacroTests: XCTestCase {
 			  "value" : 86
 			}
 			""",
-			expected: SingleValueWrapperPayload(value: TestSingleValueOptionalPayload(rawValue: 86))
+			expected: PayloadWrapper(value: TestSingleValueOptionalPayload(rawValue: 86))
 		)
 	}
 
@@ -127,13 +127,13 @@ final class CodableMacroTests: XCTestCase {
 			  "value" : null
 			}
 			""",
-			expected: SingleValueWrapperPayload(value: TestSingleValueOptionalPayload())
+			expected: PayloadWrapper(value: TestSingleValueOptionalPayload())
 		)
 	}
 
 	func testSingleValueComplexEncoding() throws {
 		try CodableUtility.assertEncoding(
-			SingleValueWrapperPayload(value: TestSingleValueComplexPayload(rawValue: 96)),
+			PayloadWrapper(value: TestSingleValueComplexPayload(rawValue: 96)),
 			expected: """
 			{
 			  "value" : 96
@@ -149,7 +149,51 @@ final class CodableMacroTests: XCTestCase {
 			  "value" : 96
 			}
 			""",
-			expected: SingleValueWrapperPayload(value: TestSingleValuePayload(rawValue: 96))
+			expected: PayloadWrapper(value: TestSingleValuePayload(rawValue: 96))
+		)
+	}
+
+	func testEnumStringEncoding() throws {
+		try CodableUtility.assertEncoding(
+			PayloadWrapper(value: TestEnumString.one),
+			expected: """
+			{
+			  "value" : "one"
+			}
+			"""
+		)
+	}
+
+	func testEnumStringDecoding() throws {
+		try CodableUtility.assertDecoding(
+			"""
+			{
+			  "value" : "two"
+			}
+			""",
+			expected: PayloadWrapper(value: TestEnumString.two)
+		)
+	}
+
+	func testEnumIntegerEncoding() throws {
+		try CodableUtility.assertEncoding(
+			PayloadWrapper(value: TestEnumInteger.one),
+			expected: """
+			{
+			  "value" : 1
+			}
+			"""
+		)
+	}
+
+	func testEnumIntegerDecoding() throws {
+		try CodableUtility.assertDecoding(
+			"""
+			{
+			  "value" : 2
+			}
+			""",
+			expected: PayloadWrapper(value: TestEnumInteger.two)
 		)
 	}
 }
@@ -200,6 +244,20 @@ private struct TestSingleValueComplexPayload: Equatable {
 	var optionalValue: Int?
 }
 
-private struct SingleValueWrapperPayload<Payload: Codable & Equatable>: Codable, Equatable {
+@Codable(.asString)
+private enum TestEnumString {
+	case zero
+	case one
+	case two
+}
+
+@Codable(.asInteger)
+private enum TestEnumInteger {
+	case zero
+	case one
+	case two
+}
+
+private struct PayloadWrapper<Payload: Codable & Equatable>: Codable, Equatable {
 	let value: Payload
 }

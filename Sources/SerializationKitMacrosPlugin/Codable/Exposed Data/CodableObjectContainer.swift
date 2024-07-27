@@ -1,8 +1,8 @@
 import SwiftSyntax
 
-/// Container types for the ``Codable`` macro.
+/// Indicate what kind of container to use when serializing an object.
 public enum CodableObjectContainer: UInt8 {
-	/// Infer the best collection type to use to serialize an object.
+	/// Infer the best container type to use to serialize an object.
 //	case inferred
 
 	/// Use a keyed container to serialize an object.
@@ -33,15 +33,11 @@ public enum CodableObjectContainer: UInt8 {
 	// TODO: don't allow @Codable(_:String) in .unkeyed or .singleValue
 	// suggest for user to explicitly set container mode to .keyed if @Codable(_:String) is actually desired
 
-	// TODO: support @Codable(_:String...) for declarations with multiple bindings
+	// TODO: support @Codable(_:String?...) for declarations with multiple bindings
+	// argument count must match binding count
 
 	// TODO: don't allow @Codable(_:CodableSequenceSerialization.inline) in .keyed or .singleValue
-	// recommend for user to remove @Codable(_:CodableSequenceSerialization.lazy) if present
-
-	// TODO: merge StringCodableMacro into CodableMacro
-	// @Codable(.asString)
-	// if i did it like that, i could also do .asInteger for enums with primary type of String
-	// would this be possible to allow on a per-property basis?  is that a bad idea?
+	// recommend for user to remove @Codable(_:CodableSequenceSerialization.standard) if present
 }
 
 // MARK: - Internal

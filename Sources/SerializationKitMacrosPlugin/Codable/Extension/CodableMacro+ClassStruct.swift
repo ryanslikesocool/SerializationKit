@@ -1,21 +1,12 @@
-import SwiftCompilerPluginMessageHandling
-import SwiftDiagnostics
 import SwiftSyntax
+import SwiftSyntaxBuilder
 import SwiftSyntaxMacros
 
-extension CodableMacro: ExtensionMacro {
-	public static func expansion(
-		of node: AttributeSyntax,
-		attachedTo declaration: some DeclGroupSyntax,
-		providingExtensionsOf type: some TypeSyntaxProtocol,
-		conformingTo protocols: [TypeSyntax],
-		in context: some MacroExpansionContext
-	) throws -> [ExtensionDeclSyntax] {
+extension CodableMacro {
+	static func processClassStructDeclaration(type: some TypeSyntaxProtocol, declaration: some DeclGroupSyntax, arguments: [AttributeArgument]) throws -> [ExtensionDeclSyntax] {
 		try validateObjectDeclaration(declaration)
 		let bindings: [BindingData] = try retrieveBindings(in: declaration)
-		let container: CodableObjectContainer = try retrieveContainerType(in: node, from: bindings)
-
-		try validateContainerBindings(bindings: bindings, container: container)
+		let container: CodableObjectContainer = try retrieveContainerType(arguments, from: bindings)
 
 		return try [
 			buildExtensionBlock(type: type, bindings: bindings, container: container),
@@ -35,15 +26,6 @@ private extension CodableMacro {
 		}
 	}
 
-	static func validateContainerBindings(bindings: [BindingData], container: CodableObjectContainer) throws {
-		if
-			container == .singleValue,
-			bindings.count > 1
-		{
-			throw Diagnostic.invalidSingleValue
-		}
-	}
-
 	static func findViableMembers(in declaration: some DeclGroupSyntax) throws -> [VariableDeclSyntax] {
 		declaration.memberBlock.members
 			.compactMap { member in member.decl.as(VariableDeclSyntax.self) }
@@ -51,30 +33,29 @@ private extension CodableMacro {
 
 	static func retrieveBindings(in declaration: some DeclGroupSyntax) throws -> [BindingData] {
 		try findViableMembers(in: declaration)
-			.flatMap(createBindingData)
+			.flatMap { member in
+				try createBindingData(for: member)
+			}
 	}
 
 	static func createBindingData(for declaration: VariableDeclSyntax) throws -> [BindingData] {
-		let argument: MemberAttributeArgument? = try getMemberAttribute(declaration)
-		try validateBindings(declaration.bindings, argument: argument)
+		let propertyArguments = try getAttributeArguments(declaration) ?? []
+		try validateBindings(declaration.bindings, arguments: propertyArguments)
 		let bindings: [(PatternBindingSyntax, TypeSyntax)] = try unwrapBindings(in: declaration)
 
-		return try bindings.compactMap { (binding, type) in
-			try BindingData(defaultType: type, binding: binding, argument: argument)
+		return try bindings.compactMap { binding, type in
+			try BindingData(defaultType: type, binding: binding, arguments: propertyArguments)
 		}
 	}
 
-	static func retrieveContainerType(in attribute: AttributeSyntax, from bindings: [BindingData]) throws -> CodableObjectContainer {
-		guard
-			let arguments = attribute.arguments?.as(LabeledExprListSyntax.self),
-			let expression = arguments.first?.expression,
-			let memberAccess = expression.as(MemberAccessExprSyntax.self),
-			let token = memberAccess.lastToken(viewMode: .fixedUp)?.tokenKind,
-			let container = CodableObjectContainer(token)
-		else {
-			return retrieveDefaultContainerType(from: bindings)
+	static func retrieveContainerType(_ arguments: [AttributeArgument], from bindings: [BindingData]) throws -> CodableObjectContainer {
+		for argument in arguments {
+			if case let .objectContainer(container) = argument {
+				return container
+			}
 		}
-		return container
+
+		return retrieveDefaultContainerType(from: bindings)
 	}
 
 	static func retrieveDefaultContainerType(from bindings: [BindingData]) -> CodableObjectContainer {
@@ -90,7 +71,13 @@ private extension CodableMacro {
 
 private extension CodableMacro {
 	static func buildCodingKeysEnum(_ bindings: [BindingData]) throws -> EnumDeclSyntax {
-		try EnumDeclSyntax("private enum __CodingKeys: String, CodingKey") {
+		let declaration: SyntaxNodeString = if bindings.contains(where: { binding in binding.customCodingKey != nil }) {
+			"private enum __CodingKeys: String, CodingKey"
+		} else {
+			"private enum __CodingKeys: CodingKey"
+		}
+
+		return try EnumDeclSyntax(declaration) {
 			for binding in bindings {
 				if let customCodingKey = binding.customCodingKey {
 					"    case \(binding.name) = \"\(customCodingKey)\""
@@ -180,74 +167,6 @@ private extension CodableMacro {
 			}
 			try buildDecoderBlock(bindings, container: container)
 			try buildEncoderBlock(bindings, container: container)
-		}
-	}
-}
-
-// MARK: - Supporting Data
-
-private extension CodableMacro {
-	struct OptionalSerializationFlags: OptionSet {
-		let rawValue: UInt8
-
-		static let providesDefault: Self = Self(rawValue: 1 << 0)
-		static let isOptional: Self = Self(rawValue: 1 << 1)
-		static let isIgnored: Self = Self(rawValue: 1 << 2)
-
-		init(rawValue: RawValue) {
-			self.rawValue = rawValue
-		}
-
-		init(binding: PatternBindingSyntax, type: TypeSyntax) {
-			self.init(rawValue: RawValue.zero)
-			if binding.initializer != nil {
-				insert(.providesDefault)
-			}
-			if type.is(OptionalTypeSyntax.self) {
-				insert(.isOptional)
-			}
-		}
-	}
-
-	struct BindingData {
-		let type: TypeSyntax
-		let sourceType: TypeSyntax
-		let optionalType: OptionalTypeSyntax
-
-		let name: TokenSyntax
-		let customCodingKey: TokenSyntax?
-		private let optionalSerializationFlags: OptionalSerializationFlags
-
-		var providesDefault: Bool { optionalSerializationFlags.contains(.providesDefault) }
-		var isOptional: Bool { optionalSerializationFlags.contains(.isOptional) }
-
-		init?(defaultType: TypeSyntax, binding: PatternBindingSyntax, argument: MemberAttributeArgument?) throws {
-			sourceType = binding.typeAnnotation?.type.trimmed ?? defaultType
-
-			self.type = if let optionalType = sourceType.as(OptionalTypeSyntax.self) {
-				optionalType.wrappedType.trimmed
-			} else if let implicitlyUnwrappedOptional = sourceType.as(ImplicitlyUnwrappedOptionalTypeSyntax.self) {
-				implicitlyUnwrappedOptional.wrappedType.trimmed
-			} else {
-				sourceType
-			}
-			self.optionalType = OptionalTypeSyntax(wrappedType: type)
-
-			switch argument {
-				case let .customKey(customKey):
-					customCodingKey = customKey
-				case .serialization(.unserialized):
-					return nil
-				default:
-					customCodingKey = nil
-			}
-
-			guard let bindingPattern = binding.pattern.as(IdentifierPatternSyntax.self)?.identifier else {
-				throw Diagnostic.invalidBindingPattern
-			}
-			name = bindingPattern
-
-			optionalSerializationFlags = OptionalSerializationFlags(binding: binding, type: sourceType)
 		}
 	}
 }
