@@ -25,6 +25,7 @@ final class CodableMacroKeyedTests: XCTestCase {
 			    @Codable("secondValue")
 			    var valueE: Int = 16
 			    var valueF: String?
+			    var valueG: Int { valueC }
 			}
 			""",
 			expandedSource:
@@ -36,6 +37,7 @@ final class CodableMacroKeyedTests: XCTestCase {
 			    var valueD: Bool
 			    var valueE: Int = 16
 			    var valueF: String?
+			    var valueG: Int { valueC }
 			}
 
 			extension TestObject: Codable {

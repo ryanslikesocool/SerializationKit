@@ -20,6 +20,10 @@ extension CodableMacro {
 		var isOptional: Bool { optionalSerializationFlags.contains(.isOptional) }
 
 		init?(defaultType: TypeSyntax, binding: PatternBindingSyntax, arguments: borrowing [AttributeArgument]) throws {
+			guard binding.accessorBlock == nil else {
+				return nil
+			}
+
 			sourceType = binding.typeAnnotation?.type.trimmed ?? defaultType
 
 			type = if let optionalType = sourceType.as(OptionalTypeSyntax.self) {

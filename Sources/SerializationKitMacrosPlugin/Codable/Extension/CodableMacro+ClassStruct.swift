@@ -33,9 +33,7 @@ private extension CodableMacro {
 
 	static func retrieveBindings(in declaration: some DeclGroupSyntax) throws -> [BindingData] {
 		try findViableMembers(in: declaration)
-			.flatMap { member in
-				try createBindingData(for: member)
-			}
+			.flatMap(createBindingData)
 	}
 
 	static func createBindingData(for declaration: VariableDeclSyntax) throws -> [BindingData] {
