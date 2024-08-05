@@ -1,0 +1,4 @@
+import SerializationKitMacrosPlugin
+
+//public typealias CodableCollectionSerialization =
+//	SerializationKitMacrosPlugin.CodableCollectionSerialization

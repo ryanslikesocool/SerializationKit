@@ -3,12 +3,9 @@ import XCTest
 
 final class CodablePayloadTests: XCTestCase {
 	func testCodablePayloadEncoding() throws {
-		let payload = PayloadTest(Float(0.555))
-		let string = try CodableUtility.encode(payload)
-
-		XCTAssertEqual(
-			string,
-			"""
+		try CodableUtility.assertEncoding(
+			TestPayload(Float(0.555)),
+			expected: """
 			{
 			  "value" : {
 			    "base" : "float",
@@ -20,17 +17,16 @@ final class CodablePayloadTests: XCTestCase {
 	}
 
 	func testCodablePayloadDecoding() throws {
-		let string: String = """
-		{
-		  "value" : {
-		    "base" : "bool",
-		    "payload" : true
-		  }
-		}
-		"""
-		let payload: PayloadTest = try CodableUtility.decode(string)
-
-		XCTAssertEqual(payload, PayloadTest(true))
+		try CodableUtility.assertDecoding(
+			"""
+			{
+			  "value" : {
+				"base" : "bool",
+				"payload" : true
+			  }
+			}
+			""", expected: TestPayload(true)
+		)
 	}
 
 	func testCodablePayloadRoundTrip() throws {
@@ -46,21 +42,19 @@ final class CodablePayloadTests: XCTestCase {
 		  }
 		}
 		"""
-		let payload: PayloadTest = PayloadTest(SIMD3<Float>(0.5, 0.7, 0.3))
-		let encoded: String = try CodableUtility.encode(payload)
-		let decoded: PayloadTest = try CodableUtility.decode(encoded)
+		let payload: TestPayload = TestPayload(SIMD3<Float>(0.5, 0.7, 0.3))
 
-		XCTAssertEqual(encoded, string)
-		XCTAssertEqual(decoded, payload)
+		try CodableUtility.assertEncoding(payload, expected: string)
+		try CodableUtility.assertDecoding(string, expected: payload)
 	}
 }
 
 // MARK: - Supporting Data
 
-private struct PayloadTest: Hashable, Codable {
-	let value: any TestPayload
+private struct TestPayload: Hashable, Codable {
+	let value: any TestPayloadValue
 
-	init(_ value: some TestPayload) {
+	init(_ value: some TestPayloadValue) {
 		self.value = value
 	}
 
@@ -71,7 +65,7 @@ private struct PayloadTest: Hashable, Codable {
 	init(from decoder: Decoder) throws {
 		let container = try decoder.container(keyedBy: CodingKeys.self)
 
-		value = try container.decode(using: TestMetatype.self, as: (any TestPayload).self, forKey: .value)
+		value = try container.decode(using: TestMetatype.self, as: (any TestPayloadValue).self, forKey: .value)
 	}
 
 	func encode(to encoder: Encoder) throws {
@@ -98,7 +92,7 @@ private enum TestMetatype: String, CodableMetatypeAccessor {
 	case int
 	case string
 
-	init?(from value: some TestPayload) {
+	init?(from value: some TestPayloadValue) {
 		switch value {
 			case _ as Bool: self = .bool
 			case _ as Float: self = .float
@@ -124,12 +118,12 @@ private enum TestMetatype: String, CodableMetatypeAccessor {
 	}
 }
 
-private protocol TestPayload: Hashable, Codable { }
+private protocol TestPayloadValue: Hashable, Codable { }
 
-extension Bool: TestPayload { }
-extension Float: TestPayload { }
-extension SIMD2<Float>: TestPayload { }
-extension SIMD3<Float>: TestPayload { }
-extension SIMD4<Float>: TestPayload { }
-extension Int: TestPayload { }
-extension String: TestPayload { }
+extension Bool: TestPayloadValue { }
+extension Float: TestPayloadValue { }
+extension SIMD2<Float>: TestPayloadValue { }
+extension SIMD3<Float>: TestPayloadValue { }
+extension SIMD4<Float>: TestPayloadValue { }
+extension Int: TestPayloadValue { }
+extension String: TestPayloadValue { }

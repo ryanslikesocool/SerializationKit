@@ -1,5 +1,6 @@
 import Foundation
 
+/// A root encoder object.
 public protocol RootEncoder {
 	typealias WritingOptions = Data.WritingOptions
 

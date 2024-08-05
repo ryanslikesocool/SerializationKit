@@ -14,18 +14,18 @@ public struct OrderedDirectoryFileWrapper<Element: OrderedDirectoryFileWrapperCo
 // MARK: - FileWrapperConvertible
 
 extension OrderedDirectoryFileWrapper: FileWrapperConvertible {
-	public init(fileWrapper: FileWrapper) throws {
+	public init(contentsOf fileWrapper: FileWrapper) throws {
 		guard let fileWrappers = fileWrapper.fileWrappers else {
 			throw CocoaError(.fileReadUnknown)
 		}
 
 		var elements = try fileWrappers
 			.filter { $0.key.hasSuffix(Element.fileExtension) }
-			.map { try Element(fileWrapper: $0.value) }
+			.map { try Element(contentsOf: $0.value) }
 
 		if
 			let fileMapFileWrapper = fileWrappers[FileMap.fileName],
-			let fileMap = try? FileMap(fileWrapper: fileMapFileWrapper)
+			let fileMap = try? FileMap(contentsOf: fileMapFileWrapper)
 		{
 			elements = fileMap.sort(elements)
 		}

@@ -4,6 +4,7 @@ import OSLog
 import SwiftUI
 
 /// A property wrapper that acts as a source of truth for a local file.
+/// - Remark: `FileState` is backed by a ``SwiftUI/State`` property wrapper, and has the same limitations.
 @propertyWrapper
 public struct FileState<Value: Codable>: DynamicProperty {
 	public typealias DefaultProvider = () -> Value
@@ -11,7 +12,10 @@ public struct FileState<Value: Codable>: DynamicProperty {
 
 	@State private var value: Value?
 
+	/// The default value to use.
 	private let defaultProvider: DefaultProvider
+
+	/// The action to perform when the underlying value has changed.  In most cases, this is writing the file back to the disk.
 	private let write: WriteAction
 
 	public var wrappedValue: Value {
