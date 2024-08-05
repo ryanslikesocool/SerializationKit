@@ -7,15 +7,11 @@ This package is under development and not considered production-ready.  Breaking
 ## Installation (Swift Package Manager)
 Add the following line to your package dependencies.
 ```swift
-.package(url: "https://github.com/ryanslikesocool/SerializationKit.git", from: "0.0.2"),
+.package(url: "https://github.com/ryanslikesocool/SerializationKit.git", from: "0.0.3"),
 ```
 
 ## Usage
 ```swift
 import SerializationKit
 // SerializationKit is now available 🎉
-```
-
-```swift
-/* TODO */
 ```
