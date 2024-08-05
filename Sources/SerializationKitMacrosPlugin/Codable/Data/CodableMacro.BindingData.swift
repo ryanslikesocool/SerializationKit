@@ -12,7 +12,7 @@ extension CodableMacro {
 		let name: TokenSyntax
 
 		let customCodingKey: TokenSyntax?
-		let sequenceSerialization: CodableSequenceSerialization?
+		let collectionSerialization: CodableCollectionSerialization?
 
 		private let optionalSerializationFlags: OptionalSerializationFlags
 
@@ -35,12 +35,12 @@ extension CodableMacro {
 			}
 			optionalType = OptionalTypeSyntax(wrappedType: type)
 
-			let (serialized, customCodingKey, sequenceSerialization) = try Self.processArguments(arguments)
+			let (serialized, customCodingKey, collectionSerialization) = try Self.processArguments(arguments)
 			guard serialized else {
 				return nil
 			}
 			self.customCodingKey = customCodingKey
-			self.sequenceSerialization = sequenceSerialization
+			self.collectionSerialization = collectionSerialization
 
 			guard let bindingPattern = binding.pattern.as(IdentifierPatternSyntax.self)?.identifier else {
 				throw Diagnostic.invalidBindingPattern
@@ -56,13 +56,13 @@ private extension CodableMacro.BindingData {
 	static func processArguments(_ arguments: [AttributeArgument]) throws -> (
 		serialized: Bool,
 		customCodingKey: TokenSyntax?,
-		sequenceSerialization: CodableSequenceSerialization?
+		collectionSerialization: CodableCollectionSerialization?
 	) {
 		var occupiedArguments: AllowedArguments = .none
 
 		var serialized: Bool = true
 		var customCodingKey: TokenSyntax? = nil
-		var sequenceSerialization: CodableSequenceSerialization? = nil
+		var collectionSerialization: CodableCollectionSerialization? = nil
 
 		loop: for argument in arguments {
 			var inserting: AllowedArguments? = nil
@@ -77,12 +77,12 @@ private extension CodableMacro.BindingData {
 				case let .propertyCustomKey(customKey):
 					inserting = .propertyCustomKey
 					customCodingKey = customKey
-				case let .sequenceSerialization(serialization):
-					sequenceSerialization = serialization
+				case let .collectionSerialization(serialization):
+					collectionSerialization = serialization
 					if serialization == .inline {
-						inserting = .sequenceSerializationInline
+						inserting = .collectionSerializationInline
 					} else {
-						inserting = .sequenceSerialization
+						inserting = .collectionSerialization
 					}
 				default:
 					break
@@ -96,7 +96,7 @@ private extension CodableMacro.BindingData {
 			}
 		}
 
-		return (serialized, customCodingKey, sequenceSerialization)
+		return (serialized, customCodingKey, collectionSerialization)
 	}
 }
 
@@ -110,7 +110,7 @@ private extension CodableMacro.BindingData {
 		static let propertySerialization: Self = Self(rawValue: 1 << 0)
 		static let propertyCustomKey: Self = Self(rawValue: 1 << 1)
 
-		static let sequenceSerialization: Self = Self(rawValue: 1 << 2)
-		static let sequenceSerializationInline: Self = [.sequenceSerialization, .propertyCustomKey]
+		static let collectionSerialization: Self = Self(rawValue: 1 << 2)
+		static let collectionSerializationInline: Self = [.collectionSerialization, .propertyCustomKey]
 	}
 }

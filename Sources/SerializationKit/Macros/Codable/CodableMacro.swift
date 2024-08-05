@@ -5,7 +5,7 @@ import SerializationKitMacrosPlugin
 public macro Codable(_ containerMode: CodableObjectContainer = .keyed)
 	= #externalMacro(module: "SerializationKitMacrosPlugin", type: "CodableMacro")
 
-/// Indicate how to serialize an `enum`.
+/// Indicate how to serialize an `enum`'s cases.
 @attached(extension, names: named(__CodingValues), named(init(from:)), named(encode(to:)), conformances: Codable)
 public macro Codable(_ enumSerialization: CodableEnumSerialization)
 	= #externalMacro(module: "SerializationKitMacrosPlugin", type: "CodableMacro")
@@ -21,7 +21,7 @@ public macro Codable(_ serialization: CodablePropertySerialization)
 public macro Codable(_ customKey: String)
 	= #externalMacro(module: "SerializationKitMacrosPlugin", type: "CodableMacro")
 
-/// Indicate how an unkeyed sequence should be serialized.
+/// Indicate how an unkeyed collection should be serialized.
 //@attached(peer)
-//public macro Codable(_ sequenceSerialization: CodableSequenceSerialization)
+//public macro Codable(_ collectionSerialization: CodableCollectionSerialization)
 //	= #externalMacro(module: "SerializationKitMacrosPlugin", type: "CodableMacro")

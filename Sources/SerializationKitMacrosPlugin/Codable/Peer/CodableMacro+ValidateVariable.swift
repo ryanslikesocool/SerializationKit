@@ -47,7 +47,7 @@ private extension CodableMacro {
 		func validate(_ argument: AttributeArgument) throws {
 			let insertingArgument: AllowedArguments = switch argument {
 				case .propertySerialization: .propertySerialization
-				case .sequenceSerialization: .sequenceSerialization
+				case .collectionSerialization: .collectionSerialization
 				case .propertyCustomKey: .propertyCustomKey
 				default: throw Diagnostic.invalidAttributeArgument
 			}
@@ -67,7 +67,7 @@ private extension CodableMacro {
 
 		static let none: Self = Self(rawValue: 0)
 		static let propertySerialization: Self = Self(rawValue: 1 << 0)
-		static let sequenceSerialization: Self = Self(rawValue: 1 << 1)
+		static let collectionSerialization: Self = Self(rawValue: 1 << 1)
 		static let propertyCustomKey: Self = Self(rawValue: 1 << 2)
 	}
 }

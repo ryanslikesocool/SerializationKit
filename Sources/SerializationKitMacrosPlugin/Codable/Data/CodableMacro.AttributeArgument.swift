@@ -5,7 +5,7 @@ extension CodableMacro {
 		case objectContainer(CodableObjectContainer)
 		case enumSerialization(CodableEnumSerialization)
 		
-		case sequenceSerialization(CodableSequenceSerialization)
+		case collectionSerialization(CodableCollectionSerialization)
 		case propertySerialization(CodablePropertySerialization)
 		case propertyCustomKey(TokenSyntax)
 	}

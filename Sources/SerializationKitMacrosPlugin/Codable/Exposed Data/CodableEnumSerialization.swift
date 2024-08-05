@@ -1,12 +1,12 @@
 import SwiftSyntax
 
-/// Indicate how an `enum` should be serialized.
-/// - Remark: This is only available for `enum`s that declare a primary value.
+/// Indicate how an `enum`'s cases should be serialized.
+/// - Remark: This is only available for `enum`s that do not have associated values.
 public enum CodableEnumSerialization: UInt8 {
-	/// Indicate that an `enum` should be serialized by case name.
+	/// Indicate that an `enum` case should be serialized by name.
 	case asString
 
-	/// Indicate that an `enum` should be serialized by case index.
+	/// Indicate that an `enum` case should be serialized by index.
 	case asInteger
 
 	// TODO: look into doing this on a per-case basis

@@ -107,8 +107,8 @@ private extension CodableMacro {
 				AttributeArgument.enumSerialization(enumSerialization)
 			} else if let propertySerialization = CodablePropertySerialization(token) {
 				AttributeArgument.propertySerialization(propertySerialization)
-			} else if let sequenceSerialization = CodableSequenceSerialization(token) {
-				AttributeArgument.sequenceSerialization(sequenceSerialization)
+			} else if let collectionSerialization = CodableCollectionSerialization(token) {
+				AttributeArgument.collectionSerialization(collectionSerialization)
 			} else {
 				throw Diagnostic.invalidAttributeArgument
 			}
