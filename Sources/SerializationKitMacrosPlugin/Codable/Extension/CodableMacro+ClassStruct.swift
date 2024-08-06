@@ -29,6 +29,10 @@ private extension CodableMacro {
 	static func findViableMembers(in declaration: some DeclGroupSyntax) throws -> [VariableDeclSyntax] {
 		declaration.memberBlock.members
 			.compactMap { member in member.decl.as(VariableDeclSyntax.self) }
+			.filter { member in
+				!member.bindings.contains(where: { binding in  binding.accessorBlock != nil })
+				&& !member.modifiers.contains(where: { modifier in modifier.name.tokenKind == .keyword(.static) })
+			}
 	}
 
 	static func retrieveBindings(in declaration: some DeclGroupSyntax) throws -> [BindingData] {

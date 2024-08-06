@@ -16,6 +16,7 @@ final class CodableMacroKeyedTests: XCTestCase {
 			"""
 			@Codable
 			struct TestObject {
+			    static var value0: Int = 1
 			    @Codable(.unserialized)
 			    var valueA: Int = 42
 			    @Codable("firstValue")
@@ -31,6 +32,7 @@ final class CodableMacroKeyedTests: XCTestCase {
 			expandedSource:
 			"""
 			struct TestObject {
+			    static var value0: Int = 1
 			    var valueA: Int = 42
 			    var valueB: Float
 			    var valueC: Int = 2

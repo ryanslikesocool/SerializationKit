@@ -12,6 +12,7 @@ private extension CodableMacro {
 	static func assertIsStoredVariable(_ declaration: borrowing some DeclSyntaxProtocol) throws -> VariableDeclSyntax {
 		guard
 			let variableDeclaration = declaration.as(VariableDeclSyntax.self),
+			!variableDeclaration.modifiers.contains(where: { modifier in modifier.name == .keyword(.static) }),
 			!variableDeclaration.bindings.contains(where: { binding in binding.accessorBlock != nil })
 		else {
 			throw Diagnostic.storedPropertiesOnly
