@@ -22,8 +22,11 @@ let package = Package(
 	],
 	targets: [
 		.target(name: "SerializationKit", dependencies: [
+			"SerializationKit_PropertyList",
 			"SerializationKitMacrosPlugin",
 		]),
+
+		.target(name: "SerializationKit_PropertyList"),
 
 		// MARK: - Plugins
 

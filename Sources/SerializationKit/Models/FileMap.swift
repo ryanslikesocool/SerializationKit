@@ -4,25 +4,35 @@ import Foundation
 public struct FileMap<ID>
 	where ID: Hashable & Codable
 {
-	public static var fileName: String { ".file_map" }
-
 	public var order: [ID]
 
 	public init(order: [ID] = []) {
 		self.order = order
 	}
 
-	public init<T: Identifiable>(elements: some Sequence<T>) where T.ID == ID {
+	public init<Element>(elements: some Sequence<Element>) where
+		Element: Identifiable,
+		Element.ID == ID
+	{
 		self.init(order: elements.map(\.id))
 	}
 
-	public func sort<T: Identifiable>(_ elements: some Sequence<T>) -> [T] where T.ID == ID {
+	public func sort<Element>(_ elements: some Sequence<Element>) -> [Element] where
+		Element: Identifiable,
+		Element.ID == ID
+	{
 		var sortIDs = order
-		let remaining: [ID] = elements.map(\.id).filter { !sortIDs.contains($0) }
-		sortIDs.append(contentsOf: remaining)
+		let remaining: [ID] = elements
+			.map(\.id)
+			.filter { (id: ID) -> Bool in
+				!sortIDs.contains(id)
+			}
+		sortIDs.append(contentsOf: consume remaining)
 
-		return sortIDs.compactMap { id in
-			elements.first(where: { $0.id == id })
+		return sortIDs.compactMap { (id: ID) -> Element? in
+			elements.first { (element: Element) -> Bool in
+				element.id == id
+			}
 		}
 	}
 }
@@ -50,3 +60,9 @@ extension FileMap: PropertyListCodable {
 // MARK: - FileWrapperConvertible
 
 extension FileMap: FileWrapperConvertible { }
+
+// MARK: - Constants
+
+public extension FileMap {
+	static var fileName: String { ".file_map" }
+}
