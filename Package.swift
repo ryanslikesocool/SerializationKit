@@ -37,17 +37,13 @@ let package = Package(
 
 		// MARK: - Tests
 
-		.testTarget(
-			name: "SerializationKitTests",
-			dependencies: ["SerializationKit"]
-		),
+		.testTarget(name: "SerializationKitTests", dependencies: [
+			"SerializationKit",
+		]),
 
-		.testTarget(
-			name: "SerializationKitMacrosTests",
-			dependencies: [
-				"SerializationKitMacrosPlugin",
-				.product(name: "SwiftSyntaxMacrosTestSupport", package: "swift-syntax"),
-			]
-		),
+		.testTarget(name: "SerializationKitMacrosTests", dependencies: [
+			"SerializationKitMacrosPlugin",
+			.product(name: "SwiftSyntaxMacrosTestSupport", package: "swift-syntax"),
+		]),
 	]
 )

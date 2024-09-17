@@ -8,7 +8,7 @@ public enum CodableMacro { }
 // MARK: - Constants
 
 extension CodableMacro {
-	static let macroAttributeName: TokenKind = .identifier("Codable")
+	static var macroAttributeName: TokenKind { .identifier("Codable") }
 }
 
 // MARK: - Common
