@@ -1,3 +1,4 @@
+import SerializationKit_Core
 import SwiftSyntax
 import SwiftSyntaxBuilder
 import SwiftSyntaxMacros
@@ -26,7 +27,7 @@ private extension CodableMacro {
 		return enumDecl
 	}
 
-	static func processArguments(_ arguments: [AttributeArgument]) throws  -> CodableEnumSerialization {
+	static func processArguments(_ arguments: [AttributeArgument]) throws -> CodableEnumSerialization {
 		var enumSerialization: CodableEnumSerialization? = nil
 
 		for argument in arguments {

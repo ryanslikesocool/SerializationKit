@@ -1,4 +1,0 @@
-import SerializationKitMacrosPlugin
-
-public typealias CodableObjectContainer =
-	SerializationKitMacrosPlugin.CodableObjectContainer

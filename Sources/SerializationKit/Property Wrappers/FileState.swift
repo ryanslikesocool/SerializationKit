@@ -4,9 +4,12 @@ import OSLog
 import SwiftUI
 
 /// A property wrapper that acts as a source of truth for a local file.
+///
 /// - Remark: `FileState` is backed by a ``SwiftUI/State`` property wrapper, and has the same limitations.
 @propertyWrapper
-public struct FileState<Value: Codable>: DynamicProperty {
+public struct FileState<Value>: DynamicProperty where
+	Value: Codable
+{
 	public typealias DefaultProvider = () -> Value
 	public typealias WriteAction = (Value) -> Void
 

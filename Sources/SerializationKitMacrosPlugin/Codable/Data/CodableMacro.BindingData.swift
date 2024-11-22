@@ -1,3 +1,4 @@
+import SerializationKit_Core
 import SwiftSyntax
 
 extension CodableMacro {
@@ -19,7 +20,7 @@ extension CodableMacro {
 		var providesDefault: Bool { optionalSerializationFlags.contains(.providesDefault) }
 		var isOptional: Bool { optionalSerializationFlags.contains(.isOptional) }
 
-		init?(defaultType: TypeSyntax, binding: PatternBindingSyntax, arguments: borrowing [AttributeArgument]) throws {
+		init?(defaultType: TypeSyntax, binding: PatternBindingSyntax, arguments: borrowing[AttributeArgument]) throws {
 			guard binding.accessorBlock == nil else {
 				return nil
 			}

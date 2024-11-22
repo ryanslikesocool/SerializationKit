@@ -1,3 +1,3 @@
-import Foundation
+import class Foundation.JSONDecoder
 
 extension JSONDecoder: RootDecoder { }

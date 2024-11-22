@@ -1,3 +1,4 @@
+import SerializationKit_Core
 import SwiftSyntax
 import SwiftSyntaxBuilder
 import SwiftSyntaxMacros
@@ -30,8 +31,8 @@ private extension CodableMacro {
 		declaration.memberBlock.members
 			.compactMap { member in member.decl.as(VariableDeclSyntax.self) }
 			.filter { member in
-				!member.bindings.contains(where: { binding in  binding.accessorBlock != nil })
-				&& !member.modifiers.contains(where: { modifier in modifier.name.tokenKind == .keyword(.static) })
+				!member.bindings.contains(where: { binding in binding.accessorBlock != nil })
+					&& !member.modifiers.contains(where: { modifier in modifier.name.tokenKind == .keyword(.static) })
 			}
 	}
 

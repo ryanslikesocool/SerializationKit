@@ -1,7 +1,9 @@
 import Foundation
 
 /// A ``Swift/Codable`` object wrapper to help with cases where a concrete type cannot be used.
-public struct CodablePayload<Base: CodableMetatypeAccessor>: Codable {
+public struct CodablePayload<Base>: Codable where
+	Base: CodableMetatypeAccessor
+{
 	public private(set) var base: Base
 	public private(set) var payload: any Codable
 

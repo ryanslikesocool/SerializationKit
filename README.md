@@ -2,7 +2,8 @@
 Common serialization utilities and extensions for Swift.
 
 ## NOTICE
-This package is under development and not considered production-ready.  Breaking changes are common, documentation is incomplete, and support is limited.  Use at your own risk.
+**This package is under development and not considered production-ready.**<br>
+Breaking changes are common, documentation is incomplete, and support is limited.  Use at your own risk.
 
 ## Installation (Swift Package Manager)
 Add the following entry to your package dependencies.

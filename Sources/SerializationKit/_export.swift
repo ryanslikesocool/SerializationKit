@@ -1,1 +1,2 @@
+@_exported import SerializationKit_Core
 @_exported import SerializationKit_PropertyList

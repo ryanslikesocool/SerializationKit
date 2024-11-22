@@ -16,7 +16,6 @@ public protocol PropertyListDataWritable: SerializedDataWritable {
 
 public extension PropertyListDataWritable {
 	static var propertyListFormat: PropertyListFormat { .xml }
-	static var plistFormat: PropertyListFormat { propertyListFormat }
 
 	func toData() throws -> Data {
 		try toData(outputFormat: Self.propertyListFormat)

@@ -1,8 +1,8 @@
 import Foundation
 
 /// An object useful for encoding and decoding the order of files in a bundle or package.
-public struct FileMap<ID>
-	where ID: Hashable & Codable
+public struct FileMap<ID> where
+	ID: Hashable & Codable
 {
 	public var order: [ID]
 

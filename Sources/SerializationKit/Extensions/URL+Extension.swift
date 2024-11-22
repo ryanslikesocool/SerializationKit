@@ -1,6 +1,6 @@
 import Foundation
 
-package extension URL {
+public extension URL {
 	/// Attempt to create any required intermediate directories in this URL's path.
 	func createIntermediateDirectories() throws {
 		let fileManager = FileManager.default

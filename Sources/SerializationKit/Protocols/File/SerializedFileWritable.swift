@@ -13,7 +13,10 @@ public protocol SerializedFileWritable<WritingOptions> {
 
 // MARK: - Default Implementation
 
-public extension SerializedFileWritable<FileWrapper.WritingOptions> where Self: FileWrapperWritable {
+public extension SerializedFileWritable where
+	Self: FileWrapperWritable,
+	WritingOptions == FileWrapper.WritingOptions
+{
 	func write(to url: URL, options: WritingOptions = []) throws {
 		try url.createIntermediateDirectories()
 
@@ -27,7 +30,10 @@ public extension SerializedFileWritable<FileWrapper.WritingOptions> where Self: 
 	}
 }
 
-public extension SerializedFileWritable<Data.WritingOptions> where Self: SerializedDataWritable {
+public extension SerializedFileWritable where
+	Self: SerializedDataWritable,
+	WritingOptions == Data.WritingOptions
+{
 	func write(to url: URL, options: WritingOptions = []) throws {
 		try url.createIntermediateDirectories()
 
@@ -40,3 +46,6 @@ public extension SerializedFileWritable<Data.WritingOptions> where Self: Seriali
 		try data.write(to: url, options: options)
 	}
 }
+
+/// An object that can be written to a file as ``Foundation/Data``.
+public typealias SerializedDataFileWritable = SerializedFileWritable<Data.WritingOptions>

@@ -5,16 +5,16 @@ import OSLog
 
 // MARK: - Logging
 
-fileprivate func logEncodingFailure(metatypeAccessor: Any.Type, value: Any) {
-	#if canImport(OSLog)
+private func logEncodingFailure(metatypeAccessor: Any.Type, value: Any) {
+#if canImport(OSLog)
 	if #available(macOS 11, iOS 14, tvOS 14, watchOS 7, *) {
 		Logger.module.error("Failed to find a valid metatype in \(metatypeAccessor) for the given value \(String(describing: value))")
 	} else {
 		printLog()
 	}
-	#else
+#else
 	printLog()
-	#endif
+#endif
 
 	func printLog() {
 		print("Failed to find a valid metatype in \(metatypeAccessor) for the given value \(value)")
@@ -24,7 +24,10 @@ fileprivate func logEncodingFailure(metatypeAccessor: Any.Type, value: Any) {
 // MARK: -
 
 public extension KeyedEncodingContainer {
-	mutating func encode<T: CodableMetatypeAccessor, U: Codable>(_ value: U, using metatype: T.Type, forKey key: Key) throws {
+	mutating func encode<T, U>(_ value: U, using metatype: T.Type, forKey key: Key) throws where
+		T: CodableMetatypeAccessor,
+		U: Codable
+	{
 		let valueType = type(of: value)
 		guard let base = T.allCases.first(where: { metatype in metatype.encodableMetatype == valueType }) else {
 			// TODO: throw instead of logging
@@ -34,7 +37,9 @@ public extension KeyedEncodingContainer {
 		try encode(CodablePayload<T>(value, base: base), forKey: key)
 	}
 
-	mutating func encode<T: CodableMetatypeAccessor>(_ values: [any Codable], using metatype: T.Type, forKey key: Key) throws {
+	mutating func encode<T>(_ values: [any Codable], using metatype: T.Type, forKey key: Key) throws where
+		T: CodableMetatypeAccessor
+	{
 		let encodingValue = values.compactMap { value -> CodablePayload<T>? in
 			let valueType = type(of: value)
 			guard let base = T.allCases.first(where: { metatype in metatype.encodableMetatype == valueType }) else {
@@ -58,14 +63,19 @@ public extension KeyedEncodingContainer {
 // MARK: - If Present
 
 public extension KeyedEncodingContainer {
-	mutating func encodeIfPresent<T: CodableMetatypeAccessor, U: Codable>(_ value: U?, using metatype: T.Type, forKey key: Key) throws {
+	mutating func encodeIfPresent<T, U>(_ value: U?, using metatype: T.Type, forKey key: Key) throws where
+		T: CodableMetatypeAccessor,
+		U: Codable
+	{
 		guard let value else {
 			return
 		}
 		try encode(value, using: metatype, forKey: key)
 	}
 
-	mutating func encodeIfPresent<T: CodableMetatypeAccessor>(_ values: [any Codable]?, using metatype: T.Type, forKey key: Key) throws {
+	mutating func encodeIfPresent<T>(_ values: [any Codable]?, using metatype: T.Type, forKey key: Key) throws where
+		T: CodableMetatypeAccessor
+	{
 		guard let values else {
 			return
 		}

@@ -8,7 +8,9 @@ public protocol FileWrapperWritable {
 
 // MARK: - Default Implementation
 
-public extension FileWrapperWritable where Self: SerializedDataWritable {
+public extension FileWrapperWritable where
+	Self: SerializedDataWritable
+{
 	func fileWrapper() throws -> FileWrapper {
 		let data = try toData()
 		return FileWrapper(regularFileWithContents: data)

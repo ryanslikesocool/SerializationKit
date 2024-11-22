@@ -1,4 +1,4 @@
-import SerializationKitMacrosPlugin
+import SerializationKit_Core
 
 /// Add custom coding support to an object and indicate the kind of container to use.
 @attached(extension, names: named(__CodingKeys), named(init(from:)), named(encode(to:)), conformances: Codable)

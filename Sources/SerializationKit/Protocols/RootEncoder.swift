@@ -4,25 +4,29 @@ import Foundation
 public protocol RootEncoder {
 	typealias WritingOptions = Data.WritingOptions
 
-	func encode<T: Encodable>(
+	func encode<T>(
 		_ value: T
-	) throws -> Data
+	) throws -> Data where
+		T: Encodable
 
-	func encode<T: Encodable>(
+	func encode<T>(
 		_ value: T,
 		to url: URL,
 		options: WritingOptions
-	) throws
+	) throws where
+		T: Encodable
 }
 
 // MARK: - Default Implementation
 
 public extension RootEncoder {
-	func encode<T: Encodable>(
+	func encode<T>(
 		_ value: T,
 		to url: URL,
 		options: WritingOptions = []
-	) throws {
+	) throws where
+		T: Encodable
+	{
 		let data: Data = try encode(value)
 		try data.write(to: url, options: options)
 	}

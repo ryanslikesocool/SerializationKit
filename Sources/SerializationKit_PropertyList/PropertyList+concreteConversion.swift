@@ -67,7 +67,9 @@ private extension PropertyList {
 		}
 	}
 
-	struct DecodableObjectWrapper<Object: Decodable>: Decodable {
+	struct DecodableObjectWrapper<Object>: Decodable where
+		Object: Decodable
+	{
 		let value: Object
 
 		init(from decoder: any Decoder) throws {

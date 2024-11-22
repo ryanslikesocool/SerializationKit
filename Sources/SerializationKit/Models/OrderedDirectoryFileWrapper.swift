@@ -1,7 +1,9 @@
 import Foundation
 
 /// An object useful for encoding and decoding a directory of objects with a specific order.
-public struct OrderedDirectoryFileWrapper<Element: OrderedDirectoryFileWrapperContent> {
+public struct OrderedDirectoryFileWrapper<Element> where
+	Element: OrderedDirectoryFileWrapperContent
+{
 	typealias FileMap = SerializationKit.FileMap<Element.ID>
 
 	public let elements: [Element]

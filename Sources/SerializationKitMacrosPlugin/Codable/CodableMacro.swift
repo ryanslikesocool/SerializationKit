@@ -1,3 +1,4 @@
+import SerializationKit_Core
 import SwiftCompilerPluginMessageHandling
 import SwiftDiagnostics
 import SwiftSyntax

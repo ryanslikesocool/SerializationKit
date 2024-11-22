@@ -8,7 +8,9 @@ public protocol FileWrapperReadable {
 
 // MARK: - Default Implementation
 
-public extension FileWrapperReadable where Self: SerializedDataReadable {
+public extension FileWrapperReadable where
+	Self: SerializedDataReadable
+{
 	init(contentsOf fileWrapper: FileWrapper) throws {
 		guard let data = fileWrapper.regularFileContents else {
 			throw CocoaError(.fileReadUnknown)

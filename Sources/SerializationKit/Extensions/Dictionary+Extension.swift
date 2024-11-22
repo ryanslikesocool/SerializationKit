@@ -1,13 +1,30 @@
 import Foundation
 
-public extension Dictionary where Key == UUID, Value: Decodable {
+public extension Dictionary where
+	Key == UUID,
+	Value: Decodable
+{
 	/// Convenience type for serialization that maps dictionary keys from `UUID` to `String`.
 	///
 	/// `UUID`s are commonly used as keys for dictionaries, but Swift does not convert them into a `String` representation when serializing, causing issues.
 	static var uuidKeyCodingType: [String: Value].Type { [String: Value].self }
 }
 
-public extension Dictionary where Key == String, Value: Decodable {
+public extension Dictionary where
+	Key: RawRepresentable,
+	Key.RawValue == String,
+	Value: Decodable
+{
+	/// Convenience type for serialization that maps dictionary keys from `RawRepresentable` to `String`.
+	///
+	/// `RawRepresentable` types are commonly used as keys for dictionaries, but Swift does not convert them into a `String` representation when serializing, causing issues.
+	static var rawRepresentableKeyCodingType: [String: Value].Type { [String: Value].self }
+}
+
+public extension Dictionary where
+	Key == String,
+	Value: Decodable
+{
 	/// Convenience value for serialization that maps dictionary keys from `String` to `UUID`.
 	///
 	/// `UUID`s are commonly used as keys for dictionaries, but Swift does not convert them into a `String` representation when serializing, causing issues.
@@ -19,15 +36,46 @@ public extension Dictionary where Key == String, Value: Decodable {
 			result[key] = element.value
 		}
 	}
+
+	/// Convenience value for serialization that maps dictionary keys from `String` to `RawRepresentable`.
+	///
+	/// `RawRepresentable` types are commonly used as keys for dictionaries, but Swift does not convert them into a `String` representation when serializing, causing issues.
+	func rawRepresentableDecodedValue<K>(_ keyType: K.Type = K.self) -> [K: Value] where
+		K: RawRepresentable,
+		K.RawValue == String
+	{
+		reduce(into: [K: Value]()) { result, element in
+			guard let key = K(rawValue: element.key) else {
+				return
+			}
+			result[key] = element.value
+		}
+	}
 }
 
-public extension Dictionary where Key == UUID, Value: Encodable {
+public extension Dictionary where
+	Key == UUID,
+	Value: Encodable
+{
 	/// Convenience value for serialization that maps dictionary keys from `UUID` to `String`.
 	///
 	/// `UUID`s are commonly used as keys for dictionaries, but Swift does not convert them into a `String` representation when serializing, causing issues.
 	var uuidKeyEncodingValue: [String: Value] {
 		reduce(into: [String: Value]()) { result, element in
 			result[element.key.uuidString] = element.value
+		}
+	}
+}
+
+public extension Dictionary where
+	Key: RawRepresentable,
+	Key.RawValue == String,
+	Value: Encodable
+{
+	/// Convenience value for serialization that maps dictionary keys from a `RawRepresentable` value to `String`.
+	var rawRepresentableKeyEncodingValue: [String: Value] {
+		reduce(into: [String: Value]()) { result, element in
+			result[element.key.rawValue] = element.value
 		}
 	}
 }

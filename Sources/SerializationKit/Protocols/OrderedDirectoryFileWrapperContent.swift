@@ -1,4 +1,6 @@
-public protocol OrderedDirectoryFileWrapperContent: FileWrapperConvertible, Identifiable where ID: Codable {
+public protocol OrderedDirectoryFileWrapperContent: FileWrapperConvertible, Identifiable where
+	ID: Codable
+{
 	/// The extension of the file.  This should exclude the leading period.
 	static var fileExtension: String { get }
 
@@ -8,6 +10,8 @@ public protocol OrderedDirectoryFileWrapperContent: FileWrapperConvertible, Iden
 
 // MARK: - Default Implementation
 
-public extension OrderedDirectoryFileWrapperContent where ID: CustomStringConvertible {
+public extension OrderedDirectoryFileWrapperContent where
+	ID: CustomStringConvertible
+{
 	var fileName: String { id.description }
 }

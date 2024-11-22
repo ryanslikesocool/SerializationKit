@@ -110,6 +110,54 @@ extension PropertyList: Codable {
 	}
 }
 
+// MARK: - CustomStringConvertible
+
+extension PropertyList: CustomStringConvertible {
+	public var description: String {
+		return switch self {
+			case let .boolean(boolean): formatValue(boolean)
+			case let .integer(integer): formatValue(integer)
+			case let .real(real): formatValue(real)
+			case let .string(string): formatValue(string)
+			case let .date(date): formatValue(date)
+			case let .data(data): formatValue(data)
+			case let .array(array):
+				formatCollection(
+					zero: "",
+					elements: array.map(String.init(describing:))
+				)
+			case let .dictionary(dictionary):
+				formatCollection(
+					zero: ":",
+					elements: dictionary.map { key, value in
+						"\"\(key)\" : \(value)"
+					}
+				)
+		}
+
+		func formatValue(_ subject: some CustomStringConvertible) -> String {
+			String(describing: subject)
+		}
+
+		func formatCollection(zero: String, elements: [String]) -> String {
+			let joinedElements = elements.joined(separator: ",\n\t")
+
+			return switch elements.count {
+				case 0:
+					"[ \(zero) ]"
+				case 1:
+					"[ \(joinedElements) ]"
+				default:
+					"""
+					[
+						\(joinedElements)
+					]
+					"""
+			}
+		}
+	}
+}
+
 // MARK: - ExpressibleByBooleanLiteral
 
 extension PropertyList: ExpressibleByBooleanLiteral {
